@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truth or Dare 21+ - Ultra Spicy & Wild Edition</title>
+    <title>Truth or Dare 21+ - Spicy Wheel & 3D Dice Edition</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -55,7 +55,6 @@
     </script>
 
     <style>
-        /* 3D Card Flip Effects */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
@@ -68,6 +67,51 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(244, 63, 94, 0.25);
         }
+
+        /* Neon Glow Effects */
+        .neon-border-rose {
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.35), inset 0 0 15px rgba(244, 63, 94, 0.15);
+        }
+
+        /* 3D Interactive Dice CSS */
+        .dice-container {
+            width: 80px;
+            height: 80px;
+            perspective: 600px;
+            margin: 0 auto;
+        }
+
+        .dice {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+
+        .dice-face {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e1b4b, #4c0519);
+            border: 2px solid #f43f5e;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.5), 0 0 15px rgba(244, 63, 94, 0.3);
+            text-shadow: 0 0 8px #f43f5e;
+        }
+
+        .face-front  { transform: rotateY(  0deg) translateZ(40px); }
+        .face-back   { transform: rotateY(180deg) translateZ(40px); }
+        .face-right  { transform: rotateY( 90deg) translateZ(40px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(40px); }
+        .face-top    { transform: rotateX( 90deg) translateZ(40px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(40px); }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
@@ -86,14 +130,11 @@
 </head>
 <body class="h-full text-slate-100 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden bg-slate-950">
 
-    <!-- Ambient Particle Canvas -->
+    <!-- Ambient Canvas and Glow Backgrounds -->
     <canvas id="particleCanvas"></canvas>
-
-    <!-- Glowing Orbs Ambient Background -->
     <div class="fixed top-1/4 -left-32 w-96 h-96 bg-rose-900/40 rounded-full filter blur-[120px] pointer-events-none animate-pulse-glow"></div>
     <div class="fixed bottom-1/4 -right-32 w-96 h-96 bg-purple-900/40 rounded-full filter blur-[120px] pointer-events-none animate-pulse-glow" style="animation-delay: 1.8s;"></div>
 
-    <!-- Age Verification Modal -->
     <div id="ageModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md">
         <div class="glass-panel max-w-md w-full p-6 md:p-8 rounded-3xl text-center shadow-2xl border border-rose-500/50 animate-float">
             <div class="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-rose-500/40 text-rose-500 shadow-lg shadow-rose-950/50">
@@ -101,11 +142,11 @@
             </div>
             <h2 class="text-2xl font-serif font-bold text-white mb-2">Cảnh Báo Nội Dung 21+</h2>
             <p class="text-slate-300 text-sm mb-6 leading-relaxed">
-                Trò chơi này chứa các câu hỏi & thử thách cực kỳ <strong class="text-rose-400">SIÊU DĂM, TÁO BẠO & DẠY SÓNG</strong> dành riêng cho cặp đôi hoặc nhóm bạn trưởng thành. Bạn xác nhận đã đủ 21 tuổi và hoàn toàn đồng thuận tham gia?
+                Trò chơi này chứa các câu hỏi & thử thách <strong class="text-rose-400">TÁO BẠO, SIÊU DĂM & DẬY SÓNG</strong> cùng <strong class="text-purple-300">VÒNG QUAY & XÚC XẮC 3D</strong> dành riêng cho cặp đôi hoặc nhóm bạn riêng tư. Bạn xác nhận đã đủ 21 tuổi?
             </p>
             <div class="flex flex-col gap-3">
                 <button id="confirmAgeBtn" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 hover:from-rose-500 hover:to-pink-500 text-white font-bold shadow-lg shadow-rose-900/50 transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
-                    <span>Tôi Đã 21+ & Sẵn Sàng Bùng Nổ</span>
+                    <span>Tôi Đã 21+ & Bắt Đầu Ngay</span>
                     <i data-lucide="sparkles" class="w-5 h-5"></i>
                 </button>
                 <button onclick="window.location.href='https://google.com'" class="w-full py-3 px-6 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-400 text-sm font-medium transition duration-200">
@@ -115,10 +156,9 @@
         </div>
     </div>
 
-    <!-- Main Application Container -->
-    <div id="appContainer" class="relative z-10 min-h-screen flex flex-col justify-between max-w-md md:max-w-xl mx-auto px-4 py-6 hidden">
+    <div id="appContainer" class="relative z-10 min-h-screen flex flex-col justify-between max-w-md md:max-w-xl mx-auto px-4 py-5 hidden">
         
-        <!-- Header Controls -->
+        <!-- Header Bar -->
         <header class="flex items-center justify-between py-2 border-b border-slate-800/80 pb-3">
             <div class="flex items-center gap-2.5">
                 <div class="p-2.5 bg-rose-500/10 rounded-xl border border-rose-500/30 text-rose-500 shadow-md">
@@ -126,7 +166,7 @@
                 </div>
                 <div>
                     <h1 class="font-serif font-bold text-lg text-white leading-tight">Truth or Dare</h1>
-                    <span class="text-[10px] tracking-widest uppercase font-extrabold text-rose-400">Night Edition 21+ (Ultra Spicy)</span>
+                    <span class="text-[10px] tracking-widest uppercase font-extrabold text-rose-400">Night Edition 21+ (Wheel & Dice)</span>
                 </div>
             </div>
 
@@ -143,10 +183,8 @@
             </div>
         </header>
 
-        <!-- Main Game Area -->
         <main class="my-auto space-y-4 pt-3">
 
-            <!-- Player Mode & Switcher Header -->
             <div class="glass-panel p-4 rounded-2xl space-y-3">
                 <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
                     <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4 text-rose-400"></i> Chế độ người chơi:</span>
@@ -158,31 +196,72 @@
 
                 <!-- Active Players Badges -->
                 <div id="playerListDisplay" class="flex flex-wrap items-center justify-around bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80 gap-2">
-                    <!-- Dynamic Badges Injected Here -->
+                    <!-- Dynamic Player Badges -->
                 </div>
 
-                <!-- Player Setup & Quick Spin -->
+                <!-- Player Controls -->
                 <div class="flex items-center justify-between pt-1">
                     <button id="toggleEditPlayersBtn" class="text-xs text-rose-400 hover:underline flex items-center gap-1">
                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Chỉnh sửa tên
                     </button>
                     <button id="spinRandomPlayerBtn" class="px-3 py-1 bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Chọn ngẫu nhiên lượt
+                        <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Đổi lượt ngẫu nhiên
                     </button>
                 </div>
 
-                <!-- Player Names Edit Form -->
+                <!-- Editable Names Form -->
                 <div id="playerEditForm" class="hidden space-y-2 pt-2 border-t border-slate-800">
-                    <div id="playerInputsGrid" class="grid grid-cols-2 gap-2">
-                        <!-- Dynamic Inputs -->
-                    </div>
+                    <div id="playerInputsGrid" class="grid grid-cols-2 gap-2"></div>
                     <button id="savePlayersBtn" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold transition">
                         Lưu tên người chơi
                     </button>
                 </div>
             </div>
 
-            <!-- Intensity Level Selectors -->
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                        <i data-lucide="dices" class="w-4 h-4 text-rose-400"></i> Công Cụ Quyết Định 3D
+                    </span>
+                    <div class="flex gap-1">
+                        <button id="tabWheelBtn" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white transition">Vòng Quay</button>
+                        <button id="tabDiceBtn" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Xúc Xắc 3D</button>
+                    </div>
+                </div>
+
+                <!-- Spinning Wheel View -->
+                <div id="wheelContainer" class="flex flex-col items-center justify-center py-2 space-y-3">
+                    <div class="relative w-52 h-52 flex items-center justify-center">
+                        <!-- Wheel Pointer -->
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-rose-500 filter drop-shadow-[0_2px_4px_rgba(244,63,94,0.8)]"></div>
+                        <canvas id="wheelCanvas" width="220" height="220" class="w-52 h-52 rounded-full shadow-2xl border-2 border-rose-500/40"></canvas>
+                    </div>
+                    <button id="spinWheelBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-rose-950/50 flex items-center gap-2 transition active:scale-95">
+                        <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+                        <span>Quay Chọn Người / Thách</span>
+                    </button>
+                </div>
+
+                <!-- 3D Interactive Dice View -->
+                <div id="diceContainer" class="hidden flex-col items-center justify-center py-4 space-y-4">
+                    <div class="dice-container my-2">
+                        <div id="dice3d" class="dice">
+                            <div class="dice-face face-front">1</div>
+                            <div class="dice-face face-back">6</div>
+                            <div class="dice-face face-right">3</div>
+                            <div class="dice-face face-left">4</div>
+                            <div class="dice-face face-top">2</div>
+                            <div class="dice-face face-bottom">5</div>
+                        </div>
+                    </div>
+                    <div id="diceResultText" class="text-xs font-bold text-rose-300 h-4">Nhấp để lắc xúc xắc chọn con số thử thách!</div>
+                    <button id="rollDiceBtn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-purple-950/50 flex items-center gap-2 transition active:scale-95">
+                        <i data-lucide="dices" class="w-4 h-4"></i>
+                        <span>Lắc Xúc Xắc 3D</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="grid grid-cols-4 gap-1.5">
                 <button data-level="1" class="level-btn active p-2.5 rounded-2xl border glass-panel border-rose-500 bg-rose-500/20 text-rose-300 flex flex-col items-center gap-1 transition-all">
                     <i data-lucide="sparkles" class="w-4 h-4"></i>
@@ -206,30 +285,29 @@
                 </button>
             </div>
 
-            <!-- Interactive 3D Card Area -->
-            <div class="perspective-1000 w-full min-h-[340px] my-2">
-                <div id="cardInner" class="transform-style-3d transition-transform duration-700 w-full min-h-[340px] relative rounded-3xl shadow-2xl">
+            <div class="perspective-1000 w-full min-h-[320px] my-2">
+                <div id="cardInner" class="transform-style-3d transition-transform duration-700 w-full min-h-[320px] relative rounded-3xl shadow-2xl">
                     
-                    <!-- Card Front (Standard State) -->
-                    <div class="backface-hidden absolute inset-0 glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rose-500/30">
+                    <!-- Card Front (Standard Unflipped State) -->
+                    <div class="backface-hidden absolute inset-0 glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rose-500/30 neon-border-rose">
                         <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-rose-600/30 to-purple-600/30 border border-rose-500/40 flex items-center justify-center text-rose-400 animate-pulse">
                             <i data-lucide="heart-handshake" class="w-10 h-10 fill-rose-500/20"></i>
                         </div>
                         <div>
-                            <p class="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-1">Lượt của: <span id="cardTurnName" class="underline font-bold text-white">Người 1</span></p>
-                            <h3 class="text-xl font-serif font-bold text-white">Rút Thẻ Sự Thật Hoặc Thử Thách</h3>
+                            <p class="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-1">Đến lượt của: <span id="cardTurnName" class="underline font-bold text-white">Người 1</span></p>
+                            <h3 class="text-xl font-serif font-bold text-white">Rút Bài Sự Thật Hoặc Thử Thách</h3>
                         </div>
-                        <p class="text-xs text-slate-400 max-w-xs">Chọn nút bên dưới để nhận câu hỏi hoặc thử thách cực kỳ nóng bỏng & nhạy cảm!</p>
+                        <p class="text-xs text-slate-400 max-w-xs">Chọn Sự Thật / Thử Thách phía dưới hoặc quay vòng quay để hệ thống chỉ định!</p>
                     </div>
 
-                    <!-- Card Back (Revealed Content State) -->
+                    <!-- Card Back (Flipped Revealed State) -->
                     <div id="cardBack" class="rotate-y-180 backface-hidden absolute inset-0 glass-panel rounded-3xl p-5 flex flex-col justify-between border border-rose-500/40 bg-slate-900/95">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                             <span id="cardCategory" class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">SỰ THẬT</span>
                             <span id="cardLevelBadge" class="text-[11px] text-slate-400 bg-slate-800/80 px-2.5 py-0.5 rounded-full">Cấp độ 1</span>
                         </div>
 
-                        <!-- Prompt Content Display -->
+                        <!-- Prompt Display -->
                         <div class="my-auto py-2 text-center px-1">
                             <p id="cardPrompt" class="text-base md:text-lg font-medium text-slate-100 leading-relaxed font-serif">
                                 Nội dung câu hỏi hay thử thách dăm sẽ xuất hiện ở đây...
@@ -263,10 +341,9 @@
                 </div>
             </div>
 
-            <!-- Draw Action Buttons -->
             <div class="grid grid-cols-2 gap-3">
-                <button id="drawTruthBtn" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-rose-500/30 hover:border-rose-500/70 text-white font-bold shadow-lg flex items-center justify-center gap-2 transition duration-200 transform active:scale-95 group">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-rose-400 group-hover:scale-110 transition"></i>
+                <button id="drawTruthBtn" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-purple-500/30 hover:border-purple-500/70 text-white font-bold shadow-lg flex items-center justify-center gap-2 transition duration-200 transform active:scale-95 group">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-purple-400 group-hover:scale-110 transition"></i>
                     <span>SỰ THẬT</span>
                 </button>
 
@@ -278,13 +355,11 @@
 
         </main>
 
-        <!-- Footer Notice -->
         <footer class="text-center text-xs text-slate-500 py-3 border-t border-slate-900 mt-4">
-            Trò chơi dành cho không gian riêng tư ❤️ Luôn tôn trọng giới hạn & đồng thuận giữa các người chơi!
+            Trò chơi dành cho không gian riêng tư ❤️ Tôn trọng giới hạn & đồng thuận giữa các người chơi!
         </footer>
     </div>
 
-    <!-- Penalty Modal -->
     <div id="penaltyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
         <div class="glass-panel max-w-sm w-full p-6 rounded-3xl text-center border border-rose-500/40 shadow-2xl space-y-4">
             <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/30">
@@ -305,7 +380,6 @@
         </div>
     </div>
 
-    <!-- Custom Question Modal -->
     <div id="customModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
         <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-rose-500/40 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -345,7 +419,6 @@
         </div>
     </div>
 
-    <!-- History Log Modal -->
     <div id="historyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
         <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-rose-500/40 shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -365,9 +438,8 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Logic & Dataset -->
     <script>
-        // Massive 18+/21+ Explicit Question & Dare Library
+        // Massive 18+/21+ Question & Dare Dataset
         const gameData = {
             1: { // Level 1 - Khởi Động / Warmup
                 truth: [
@@ -469,18 +541,18 @@
             "Đóng vai người phục vụ tuân theo 1 yêu cầu nhỏ của đối phương trong 10 phút."
         ];
 
-        // Game State Management
-        let playerCount = 2; // Default 2
+        // Application State
+        let playerCount = 2;
         let playerNames = ["Người 1", "Người 2", "Người 3", "Người 4"];
         let currentTurnIndex = 0;
-        let selectedLevel = '1'; // '1', '2', '3', 'all'
+        let selectedLevel = '1';
         let soundEnabled = true;
         let isFlipped = false;
         let timerInterval = null;
         let currentCardType = null;
         let historyLog = [];
 
-        // Element Selectors
+        // Elements
         const ageModal = document.getElementById('ageModal');
         const confirmAgeBtn = document.getElementById('confirmAgeBtn');
         const appContainer = document.getElementById('appContainer');
@@ -528,12 +600,28 @@
         const clearHistoryBtn = document.getElementById('clearHistoryBtn');
         const soundToggle = document.getElementById('soundToggle');
 
-        // Age Verification Initialization
+        // Tool Tabs & Wheel/Dice Elements
+        const tabWheelBtn = document.getElementById('tabWheelBtn');
+        const tabDiceBtn = document.getElementById('tabDiceBtn');
+        const wheelContainer = document.getElementById('wheelContainer');
+        const diceContainer = document.getElementById('diceContainer');
+        const spinWheelBtn = document.getElementById('spinWheelBtn');
+        const rollDiceBtn = document.getElementById('rollDiceBtn');
+        const dice3d = document.getElementById('dice3d');
+        const diceResultText = document.getElementById('diceResultText');
+        const wheelCanvas = document.getElementById('wheelCanvas');
+        const wheelCtx = wheelCanvas.getContext('2d');
+
+        let wheelAngle = 0;
+        let isWheelSpinning = false;
+
+        // Initialization
         confirmAgeBtn.addEventListener('click', () => {
             ageModal.classList.add('hidden');
             appContainer.classList.remove('hidden');
             initAudioContext();
             renderPlayers();
+            drawWheel();
         });
 
         function renderPlayers() {
@@ -561,6 +649,7 @@
 
             cardTurnName.textContent = playerNames[currentTurnIndex];
             lucide.createIcons();
+            drawWheel();
         }
 
         // Mode Toggles
@@ -602,7 +691,7 @@
             playSound('flip');
         });
 
-        // Level selection
+        // Intensity Level Toggles
         levelBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 levelBtns.forEach(b => {
@@ -614,6 +703,160 @@
                 selectedLevel = btn.dataset.level;
                 playSound('click');
             });
+        });
+
+        function getWheelSegments() {
+            const segments = [];
+            for (let i = 0; i < playerCount; i++) {
+                segments.push(`${playerNames[i]} - Truth`);
+                segments.push(`${playerNames[i]} - Dare`);
+            }
+            return segments;
+        }
+
+        function drawWheel() {
+            const segments = getWheelSegments();
+            const numSegments = segments.length;
+            const arcSize = (2 * Math.PI) / numSegments;
+            const radius = wheelCanvas.width / 2;
+
+            wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+            wheelCtx.save();
+            wheelCtx.translate(radius, radius);
+            wheelCtx.rotate(wheelAngle);
+
+            const colors = ['#e11d48', '#3b0764', '#9f1239', '#1e1b4b', '#f43f5e', '#4c0519'];
+
+            for (let i = 0; i < numSegments; i++) {
+                const angle = i * arcSize;
+                wheelCtx.beginPath();
+                wheelCtx.fillStyle = colors[i % colors.length];
+                wheelCtx.moveTo(0, 0);
+                wheelCtx.arc(0, 0, radius - 4, angle, angle + arcSize);
+                wheelCtx.fill();
+                wheelCtx.lineWidth = 1.5;
+                wheelCtx.strokeStyle = '#f43f5e';
+                wheelCtx.stroke();
+
+                // Segment Text
+                wheelCtx.save();
+                wheelCtx.rotate(angle + arcSize / 2);
+                wheelCtx.textAlign = 'right';
+                wheelCtx.fillStyle = '#ffffff';
+                wheelCtx.font = 'bold 10px Plus Jakarta Sans, sans-serif';
+                wheelCtx.fillText(segments[i], radius - 15, 4);
+                wheelCtx.restore();
+            }
+
+            // Center Ring
+            wheelCtx.beginPath();
+            wheelCtx.arc(0, 0, 20, 0, 2 * Math.PI);
+            wheelCtx.fillStyle = '#0f172a';
+            wheelCtx.fill();
+            wheelCtx.strokeStyle = '#f43f5e';
+            wheelCtx.lineWidth = 3;
+            wheelCtx.stroke();
+
+            wheelCtx.restore();
+        }
+
+        spinWheelBtn.addEventListener('click', () => {
+            if (isWheelSpinning) return;
+            isWheelSpinning = true;
+
+            const extraSpins = 5 + Math.random() * 5;
+            const totalRotation = extraSpins * 2 * Math.PI + Math.random() * 2 * Math.PI;
+            const duration = 3500;
+            const startAngle = wheelAngle;
+            const startTime = performance.now();
+
+            function animateWheel(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Cubic ease-out
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+
+                wheelAngle = startAngle + totalRotation * easeOut;
+                drawWheel();
+
+                if (Math.random() < 0.2) playSound('click');
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateWheel);
+                } else {
+                    isWheelSpinning = false;
+                    const segments = getWheelSegments();
+                    const numSegments = segments.length;
+                    const arcSize = (2 * Math.PI) / numSegments;
+                    
+                    // Determine winning segment pointed by top arrow
+                    const normalizedAngle = (1.5 * Math.PI - (wheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+                    const selectedIndex = Math.floor(normalizedAngle / arcSize) % numSegments;
+                    
+                    const resultText = segments[selectedIndex];
+                    const [pName, actionType] = resultText.split(' - ');
+                    
+                    // Match player
+                    const pIndex = playerNames.indexOf(pName);
+                    if (pIndex !== -1) currentTurnIndex = pIndex;
+                    renderPlayers();
+
+                    drawCard(actionType.toLowerCase() === 'truth' ? 'truth' : 'dare');
+                }
+            }
+
+            requestAnimationFrame(animateWheel);
+        });
+
+        tabWheelBtn.addEventListener('click', () => {
+            tabWheelBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white transition";
+            tabDiceBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+            wheelContainer.classList.remove('hidden');
+            diceContainer.classList.add('hidden');
+            playSound('click');
+        });
+
+        tabDiceBtn.addEventListener('click', () => {
+            tabDiceBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white transition";
+            tabWheelBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+            diceContainer.classList.remove('hidden');
+            wheelContainer.classList.add('hidden');
+            playSound('click');
+        });
+
+        rollDiceBtn.addEventListener('click', () => {
+            playSound('flip');
+            const targetFace = Math.floor(Math.random() * 6) + 1;
+            
+            // Map 3D Rotation for faces
+            const rotations = {
+                1: { x: 0, y: 0 },
+                2: { x: -90, y: 0 },
+                3: { x: 0, y: -90 },
+                4: { x: 0, y: 90 },
+                5: { x: 90, y: 0 },
+                6: { x: 0, y: 180 }
+            };
+
+            const target = rotations[targetFace];
+            const extraX = (Math.floor(Math.random() * 3) + 3) * 360;
+            const extraY = (Math.floor(Math.random() * 3) + 3) * 360;
+
+            dice3d.style.transform = `rotateX(${target.x + extraX}deg) rotateY(${target.y + extraY}deg)`;
+            diceResultText.textContent = "Đang lắc...";
+
+            setTimeout(() => {
+                const actions = [
+                    "Hôn trong 10 giây",
+                    "Thì thầm 2 lời dăm",
+                    "Cởi 1 món đồ",
+                    "Mát-xa trong 30 giây",
+                    "Thực hiện theo lượt rút",
+                    "Thực hiện thử thách x2"
+                ];
+                diceResultText.textContent = `Số ${targetFace}: ${actions[targetFace - 1]}`;
+                playSound('chime');
+            }, 1200);
         });
 
         // Core Draw Engine
@@ -642,7 +885,7 @@
 
             if (type === 'truth') {
                 cardCategory.textContent = "SỰ THẬT";
-                cardCategory.className = "text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30";
+                cardCategory.className = "text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30";
             } else {
                 cardCategory.textContent = "THỬ THÁCH";
                 cardCategory.className = "text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30";
@@ -702,7 +945,7 @@
             }, 1000);
         }
 
-        // Penalties Logic
+        // Penalty Modal Logic
         function generatePenalty() {
             const randomPenalty = penalties[Math.floor(Math.random() * penalties.length)];
             penaltyText.textContent = `"${randomPenalty}"`;
@@ -768,7 +1011,7 @@
                 el.innerHTML = `
                     <div class="flex items-center justify-between font-bold text-[10px]">
                         <span class="text-rose-400">${item.player}</span>
-                        <span class="${item.type === 'Sự Thật' ? 'text-blue-400' : 'text-pink-400'} uppercase">${item.type}</span>
+                        <span class="${item.type === 'Sự Thật' ? 'text-purple-400' : 'text-pink-400'} uppercase">${item.type}</span>
                     </div>
                     <p class="text-slate-300 font-serif">${item.prompt}</p>
                 `;
@@ -776,7 +1019,6 @@
             });
         }
 
-        // Web Audio Synthesizer Sound Effects
         let audioCtx = null;
 
         function initAudioContext() {
@@ -838,7 +1080,6 @@
             lucide.createIcons();
         });
 
-        // Particle Background Canvas Loop
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
