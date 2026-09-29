@@ -2,1048 +2,1321 @@
 <html lang="vi" class="h-full bg-slate-950">
 <head>
     <meta charset="UTF-8">
-    <meta name=a"viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truth or Dare 21+ - Spicy Wheel Edition</title>
-    
-    <!-- Tailwind CSS -->
+    <!-- Đã sửa lỗi gõ nhầm: name=a"viewport" ở bản cũ làm giao diện điện thoại bị phóng to sai -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0610">
+    <title>Truth or Dare 21+ · Inferno Edition</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        roseCustom: {
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                            800: '#9f1239',
-                            900: '#881337',
-                            950: '#4c0519',
-                        },
-                        purpleCustom: {
-                            900: '#3b0764',
-                            950: '#1e1b4b',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 3.5s infinite ease-in-out',
-                        'float': 'float 5s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { opacity: '0.35', transform: 'scale(1)' },
-                            '50%': { opacity: '0.75', transform: 'scale(1.1)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                        }
-                    }
-                }
-            }
+            theme: { extend: { fontFamily: {
+                sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                serif: ['Playfair Display', 'Georgia', 'serif'],
+            } } }
         }
     </script>
 
     <style>
+        :root { --wine: #0b0610; --panel: rgba(24, 12, 30, .80); --line: rgba(244, 63, 94, .22); }
         html { scroll-behavior: smooth; }
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
+        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--wine); -webkit-tap-highlight-color: transparent; }
+        .glass { background: var(--panel); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); }
+        .panel-title { font-weight: 800; font-size: 13px; color: #fda4af; display: flex; align-items: center; gap: 6px; }
 
-        /* Glassmorphism styling */
-        .glass-panel {
-            background: rgba(18, 12, 28, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(244, 63, 94, 0.25);
-        }
+        .icon-btn { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px;
+            background: rgba(15, 8, 20, .85); border: 1px solid rgba(148, 163, 184, .18); color: #cbd5e1; transition: .15s; }
+        .icon-btn:hover { color: #fff; border-color: rgba(244, 63, 94, .5); }
+        .btn { transition: transform .1s, filter .15s, opacity .15s; }
+        .btn:active:not(:disabled) { transform: scale(.96); }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+        :focus-visible { outline: 2px solid #fb7185; outline-offset: 2px; }
 
-        /* Neon Glow Effects */
-        .neon-border-rose {
-            box-shadow: 0 0 15px rgba(244, 63, 94, 0.35), inset 0 0 15px rgba(244, 63, 94, 0.15);
-        }
+        /* Danh sách người chơi */
+        .pl-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; border: 1px solid rgba(148,163,184,.14); background: rgba(10, 5, 14, .6); position: relative; transition: .2s; }
+        .pl-cur { border-color: #f43f5e; background: rgba(244, 63, 94, .12); box-shadow: 0 0 0 1px rgba(244,63,94,.35), 0 0 22px rgba(244,63,94,.22); }
+        .pl-target { border-color: #f59e0b; background: rgba(245, 158, 11, .10); }
+        .pl-roll { border-color: #fbbf24; background: rgba(251, 191, 36, .22); transform: scale(1.03); }
+        .avatar { width: 38px; height: 38px; border-radius: 12px; flex: none; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-family: 'Playfair Display', serif; }
+        .name-input { width: 100%; background: transparent; border: 0; border-bottom: 1px dashed transparent; color: #fff; font-weight: 700; font-size: 14px; padding: 0; }
+        .name-input:hover, .name-input:focus { border-bottom-color: rgba(244, 63, 94, .6); outline: none; }
+        .rm-btn { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 999px; background: #1e1024; border: 1px solid rgba(244,63,94,.4); color: #fda4af; font-size: 10px; line-height: 1; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); }
-        ::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.5); border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(225, 29, 72, 0.8); }
+        /* Công tắc giới hạn */
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 2px; border-bottom: 1px solid rgba(148,163,184,.10); font-size: 13px; }
+        .sw-row:last-child { border-bottom: 0; }
+        .sw { width: 42px; height: 24px; border-radius: 999px; background: #334155; position: relative; flex: none; transition: .2s; }
+        .sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 999px; background: #fff; transition: .2s; }
+        .sw[aria-pressed="true"] { background: #e11d48; }
+        .sw[aria-pressed="true"]::after { left: 21px; }
 
-        canvas#particleCanvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+        /* Thanh nhiệt độ */
+        .heat-bar { background: linear-gradient(90deg, #7c3aed 0%, #e11d48 55%, #f59e0b 100%); }
+        .lvl-btn { border: 1px solid rgba(148,163,184,.16); background: rgba(10,5,14,.6); color: #94a3b8; border-radius: 14px; padding: 8px 4px; font-size: 12px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: .15s; }
+        .lvl-btn small { font-size: 10px; font-weight: 500; opacity: .75; }
+        .lvl-btn.on { border-color: #f43f5e; background: rgba(244,63,94,.18); color: #fecdd3; box-shadow: 0 0 16px rgba(244,63,94,.25); }
+
+        /* Thẻ bài */
+        @keyframes flipIn { from { transform: perspective(900px) rotateY(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+        .flip-in { animation: flipIn .55s cubic-bezier(.2, .8, .2, 1); }
+        @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .floaty { animation: floaty 4.5s ease-in-out infinite; }
+        @keyframes glow { 0%, 100% { opacity: .35; } 50% { opacity: .7; } }
+        .glow { animation: glow 3.6s ease-in-out infinite; }
+        .tag-chip { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(148,163,184,.12); color: #cbd5e1; border: 1px solid rgba(148,163,184,.18); }
+
+        /* Vòng quay */
+        #wheel { transition: none; will-change: transform; filter: drop-shadow(0 0 22px rgba(244,63,94,.35)); }
+
+        /* Modal */
+        .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 12px; background: rgba(4, 2, 8, .78); backdrop-filter: blur(6px); }
+        .modal.hidden { display: none; }
+        .sheet { width: 100%; max-width: 440px; max-height: 88vh; overflow: auto; border-radius: 24px; padding: 20px; }
+
+        /* Bố cục: điện thoại chỉ hiện 1 tab, PC hiện nhiều cột */
+        @media (max-width: 1023px) { .tab-off { display: none !important; } }
+        @media (min-width: 1024px) and (max-width: 1279px) { #colLog { display: none !important; } }
+        .drawbar { position: sticky; bottom: calc(68px + env(safe-area-inset-bottom, 0px)); z-index: 30; }
+        @media (min-width: 1024px) { .drawbar { position: static; } }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 9px 0 8px; font-size: 11px; font-weight: 700; color: #94a3b8; }
+        .nav-btn.on { color: #fb7185; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, .5); border-radius: 999px; }
+        canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        @media (prefers-reduced-motion: reduce) { .floaty, .glow, .flip-in { animation: none !important; } }
     </style>
 </head>
-<body class="h-full text-slate-100 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden bg-slate-950">
+<body class="text-slate-100 selection:bg-rose-500 selection:text-white overflow-x-hidden min-h-full">
 
-    <canvas id="particleCanvas"></canvas>
-    <div class="fixed top-1/4 -left-32 w-96 h-96 bg-rose-900/40 rounded-full filter blur-[120px] pointer-events-none animate-pulse-glow"></div>
-    <div class="fixed bottom-1/4 -right-32 w-96 h-96 bg-purple-900/40 rounded-full filter blur-[120px] pointer-events-none animate-pulse-glow" style="animation-delay: 1.8s;"></div>
+<canvas id="fx"></canvas>
+<div class="fixed top-1/4 -left-32 w-96 h-96 bg-rose-900/40 rounded-full blur-[120px] pointer-events-none glow"></div>
+<div class="fixed bottom-1/4 -right-32 w-96 h-96 bg-purple-900/40 rounded-full blur-[120px] pointer-events-none glow" style="animation-delay:1.8s"></div>
 
-    <!-- Age Verification Modal -->
-    <div id="ageModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md">
-        <div class="glass-panel max-w-md w-full p-6 md:p-8 rounded-3xl text-center shadow-2xl border border-rose-500/50 animate-float">
-            <div class="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-rose-500/40 text-rose-500 shadow-lg shadow-rose-950/50">
-                <i data-lucide="flame" class="w-8 h-8"></i>
-            </div>
-            <h2 class="text-2xl font-serif font-bold text-white mb-2">Cảnh Báo Nội Dung 21+</h2>
-            <p class="text-slate-300 text-sm mb-6 leading-relaxed">
-                Trò chơi này chứa các câu hỏi & thử thách <strong class="text-rose-400">TÁO BẠO & SIÊU DĂM 18+/21+</strong> cùng <strong class="text-purple-300">VÒNG QUAY MAY MẮN</strong> dành riêng cho cặp đôi hoặc nhóm bạn riêng tư. Bạn xác nhận đã đủ 21 tuổi?
-            </p>
-            <div class="flex flex-col gap-3">
-                <button id="confirmAgeBtn" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 hover:from-rose-500 hover:to-pink-500 text-white font-bold shadow-lg shadow-rose-900/50 transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
-                    <span>Tôi Đã 21+ & Bắt Đầu Ngay</span>
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
-                </button>
-                <button onclick="window.location.href='https://google.com'" class="w-full py-3 px-6 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-400 text-sm font-medium transition duration-200">
-                    Chưa đủ tuổi (Thoát)
-                </button>
-            </div>
+<!-- ============ CỔNG XÁC NHẬN 21+ & ĐỒNG THUẬN ============ -->
+<div id="ageModal" class="modal" style="z-index:80">
+    <div class="glass sheet text-center floaty" style="max-width:460px">
+        <div class="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-rose-500/40 text-3xl">🔥</div>
+        <h2 class="text-2xl font-serif font-bold text-white mb-2">Inferno Edition · 21+</h2>
+        <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+            Bản này <strong class="text-rose-400">nóng hơn, nhiều thử thách hơn</strong>: 4 cấp độ, vòng quay số phận, điểm thưởng, thanh nhiệt độ và hình phạt. Chỉ dành cho người lớn chơi riêng tư.
+        </p>
+        <label class="flex items-start gap-3 text-left text-[13px] text-slate-300 bg-slate-950/60 border border-slate-800 rounded-xl p-3 mb-4 cursor-pointer">
+            <input id="ageCheck" type="checkbox" class="mt-1 w-4 h-4 accent-rose-500 flex-none">
+            <span>Tất cả người chơi <b>đủ 21 tuổi</b>, tự nguyện tham gia và hiểu rằng ai cũng có quyền <b>dừng hoặc bỏ qua bất cứ lúc nào</b> mà không bị phán xét.</span>
+        </label>
+        <div class="flex flex-col gap-2.5">
+            <button id="ageOk" disabled class="btn w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white font-bold shadow-lg shadow-rose-950/60">Vào chơi</button>
+            <button onclick="location.href='https://google.com'" class="btn w-full py-3 rounded-xl bg-slate-800/60 text-slate-400 text-sm font-medium">Chưa đủ tuổi, thoát</button>
         </div>
     </div>
+</div>
 
-    <div id="appContainer" class="relative z-10 min-h-screen flex flex-col justify-between max-w-md md:max-w-xl mx-auto px-4 py-5 hidden">
-        
-        <header class="flex items-center justify-between py-2 border-b border-slate-800/80 pb-3">
-            <div class="flex items-center gap-2.5">
-                <div class="p-2.5 bg-rose-500/10 rounded-xl border border-rose-500/30 text-rose-500 shadow-md">
-                    <i data-lucide="flame" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h1 class="font-serif font-bold text-lg text-white leading-tight">Truth or Dare</h1>
-                    <span class="text-[10px] tracking-widest uppercase font-extrabold text-rose-400">Night Edition 21+ (Spinning Wheel)</span>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <button id="historyToggleBtn" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white transition" title="Lịch sử bài đã rút">
-                    <i data-lucide="history" class="w-5 h-5"></i>
-                </button>
-                <button id="soundToggle" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white transition" title="Bật/Tắt âm thanh">
-                    <i data-lucide="volume-2" class="w-5 h-5"></i>
-                </button>
-                <button id="openCustomModalBtn" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white transition" title="Thêm câu hỏi custom">
-                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </header>
-
-        <main class="my-auto space-y-4 pt-3">
-
-            <!-- Player Settings Card -->
-            <div class="glass-panel p-4 rounded-2xl space-y-3">
-                <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
-                    <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4 text-rose-400"></i> Chế độ người chơi:</span>
-                    <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
-                        <button id="mode2Btn" class="px-3 py-1 rounded-md text-xs font-semibold bg-rose-600 text-white transition">2 Người (Cặp Đôi)</button>
-                        <button id="mode4Btn" class="px-3 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">4 Người (Nhóm)</button>
-                    </div>
-                </div>
-
-                <div id="playerListDisplay" class="flex flex-wrap items-center justify-around bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80 gap-2"></div>
-
-                <div class="flex items-center justify-between pt-1">
-                    <button id="toggleEditPlayersBtn" class="text-xs text-rose-400 hover:underline flex items-center gap-1">
-                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Chỉnh sửa tên
-                    </button>
-                    <button id="spinRandomPlayerBtn" class="px-3 py-1 bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Đổi lượt ngẫu nhiên
-                    </button>
-                </div>
-
-                <div id="playerEditForm" class="hidden space-y-2 pt-2 border-t border-slate-800">
-                    <div id="playerInputsGrid" class="grid grid-cols-2 gap-2"></div>
-                    <button id="savePlayersBtn" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold transition">
-                        Lưu tên người chơi
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass-panel p-4 rounded-2xl space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                        <i data-lucide="disc" class="w-4 h-4 text-rose-400"></i> Vòng Quay Chỉ Định
-                    </span>
-                    <span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800">
-                        Chỉ định Người & Hành Động
-                    </span>
-                </div>
-
-                <div id="wheelContainer" class="flex flex-col items-center justify-center py-2 space-y-3">
-                    <div class="relative w-56 h-56 flex items-center justify-center">
-                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-rose-500 filter drop-shadow-[0_2px_4px_rgba(244,63,94,0.8)]"></div>
-                        <canvas id="wheelCanvas" width="240" height="240" class="w-56 h-56 rounded-full shadow-2xl border-2 border-rose-500/40"></canvas>
-                    </div>
-                    <button id="spinWheelBtn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-rose-950/50 flex items-center gap-2 transition active:scale-95">
-                        <i data-lucide="rotate-cw" class="w-4 h-4"></i>
-                        <span>Quay Chọn Người & Thách</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Level Selector Buttons -->
-            <div class="grid grid-cols-4 gap-1.5">
-                <button data-level="1" class="level-btn active p-2.5 rounded-2xl border glass-panel border-rose-500 bg-rose-500/20 text-rose-300 flex flex-col items-center gap-1 transition-all">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                    <span class="text-[11px] font-bold">Cấp 1</span>
-                    <span class="text-[9px] opacity-75">Khởi Động</span>
-                </button>
-                <button data-level="2" class="level-btn p-2.5 rounded-2xl border glass-panel border-slate-800 text-slate-400 flex flex-col items-center gap-1 transition-all hover:border-slate-700">
-                    <i data-lucide="flame" class="w-4 h-4"></i>
-                    <span class="text-[11px] font-bold">Cấp 2</span>
-                    <span class="text-[9px] opacity-75">Tăng Nhiệt 18+</span>
-                </button>
-                <button data-level="3" class="level-btn p-2.5 rounded-2xl border glass-panel border-slate-800 text-slate-400 flex flex-col items-center gap-1 transition-all hover:border-slate-700">
-                    <i data-lucide="zap" class="w-4 h-4"></i>
-                    <span class="text-[11px] font-bold">Cấp 3</span>
-                    <span class="text-[9px] opacity-75">Siêu Dăm 21+</span>
-                </button>
-                <button data-level="all" class="level-btn p-2.5 rounded-2xl border glass-panel border-slate-800 text-slate-400 flex flex-col items-center gap-1 transition-all hover:border-slate-700">
-                    <i data-lucide="shuffle" class="w-4 h-4"></i>
-                    <span class="text-[11px] font-bold">Trộn All</span>
-                    <span class="text-[9px] opacity-75">Cực Cháy</span>
-                </button>
-            </div>
-
-            <div id="cardSection" class="perspective-1000 w-full min-h-[320px] my-2 scroll-mt-6">
-                <div id="cardInner" class="transform-style-3d transition-transform duration-700 w-full min-h-[320px] relative rounded-3xl shadow-2xl">
-                    
-                    <!-- Card Front -->
-                    <div class="backface-hidden absolute inset-0 glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rose-500/30 neon-border-rose">
-                        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-rose-600/30 to-purple-600/30 border border-rose-500/40 flex items-center justify-center text-rose-400 animate-pulse">
-                            <i data-lucide="heart-handshake" class="w-10 h-10 fill-rose-500/20"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-1">Đến lượt của: <span id="cardTurnName" class="underline font-bold text-white">Người 1</span></p>
-                            <h3 class="text-xl font-serif font-bold text-white">Rút Bài Sự Thật Hoặc Thử Thách</h3>
-                        </div>
-                        <p class="text-xs text-slate-400 max-w-xs">Chọn Sự Thật / Thử Thách phía dưới hoặc quay vòng quay để hệ thống chỉ định!</p>
-                    </div>
-
-                    <!-- Card Back -->
-                    <div id="cardBack" class="rotate-y-180 backface-hidden absolute inset-0 glass-panel rounded-3xl p-5 flex flex-col justify-between border border-rose-500/40 bg-slate-900/95">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                            <span id="cardCategory" class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">SỰ THẬT</span>
-                            <span id="cardLevelBadge" class="text-[11px] text-slate-400 bg-slate-800/80 px-2.5 py-0.5 rounded-full">Cấp độ 1</span>
-                        </div>
-
-                        <div class="my-auto py-2 text-center px-1">
-                            <p id="cardPrompt" class="text-base md:text-lg font-medium text-slate-100 leading-relaxed font-serif">
-                                Nội dung câu hỏi hay thử thách dăm sẽ xuất hiện ở đây...
-                            </p>
-                        </div>
-
-                        <!-- Timer Container -->
-                        <div id="timerContainer" class="hidden flex flex-col items-center gap-1.5 border-t border-slate-800/80 pt-2 mb-2">
-                            <div class="flex items-center gap-2 text-rose-400 text-xs font-bold">
-                                <i data-lucide="timer" class="w-4 h-4"></i>
-                                <span id="timerCountdown">00:45</span>
-                            </div>
-                            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                                <div id="timerProgress" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full w-full transition-all duration-1000 linear"></div>
-                            </div>
-                        </div>
-
-                        <!-- Card Quick Actions -->
-                        <div class="flex items-center justify-between border-t border-slate-800/80 pt-3 gap-1.5">
-                            <button id="rerollBtn" class="flex-1 py-2 px-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1 transition">
-                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Câu Khác
-                            </button>
-                            <button id="skipPenaltyBtn" class="flex-1 py-2 px-2 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/80 text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition">
-                                <i data-lucide="skull" class="w-3.5 h-3.5"></i> Chịu Phạt
-                            </button>
-                            <button id="completeTurnBtn" class="flex-1 py-2 px-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1 transition shadow-md shadow-emerald-950/50">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Xong lượt
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Draw Decision Buttons -->
-            <div class="grid grid-cols-2 gap-3">
-                <button id="drawTruthBtn" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-purple-500/30 hover:border-purple-500/70 text-white font-bold shadow-lg flex items-center justify-center gap-2 transition duration-200 transform active:scale-95 group">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-purple-400 group-hover:scale-110 transition"></i>
-                    <span>SỰ THẬT</span>
-                </button>
-
-                <button id="drawDareBtn" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 hover:from-rose-500 hover:to-pink-500 text-white font-bold shadow-lg shadow-rose-950/50 flex items-center justify-center gap-2 transition duration-200 transform active:scale-95 group">
-                    <i data-lucide="flame" class="w-5 h-5 text-rose-200 group-hover:scale-110 transition"></i>
-                    <span>THỬ THÁCH</span>
-                </button>
-            </div>
-
-        </main>
-
-        <footer class="text-center text-xs text-slate-500 py-3 border-t border-slate-900 mt-4">
-            Trò chơi dành cho không gian riêng tư ❤️ Tôn trọng giới hạn & đồng thuận giữa các người chơi!
-        </footer>
-    </div>
-
-    <!-- Penalty Modal with 1-Reroll limit logic -->
-    <div id="penaltyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-sm w-full p-6 rounded-3xl text-center border border-rose-500/40 shadow-2xl space-y-4">
-            <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/30">
-                <i data-lucide="skull" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-lg font-bold text-white">Hình Phạt Bỏ Qua (Spicy)</h3>
-            
-            <p id="penaltyText" class="text-rose-200 font-serif text-sm md:text-base italic leading-relaxed px-2">
-                Đang tạo hình phạt...
-            </p>
-
-            <div id="penaltyRerollBadge" class="text-[11px] text-amber-400 bg-amber-950/40 border border-amber-800/50 py-1 px-3 rounded-full inline-block font-medium">
-                ⚡ Bạn có 1 lần đổi hình phạt
-            </div>
-
-            <div class="flex gap-2 pt-1">
-                <button id="spinPenaltyAgainBtn" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed">
-                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Đổi 1 Lần
-                </button>
-                <button id="closePenaltyBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition shadow-lg shadow-rose-950/50">
-                    Chấp nhận phạt
-                </button>
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 glass" style="border-width:0 0 1px 0; padding-top: env(safe-area-inset-top, 0px)">
+    <div class="mx-auto max-w-[1600px] px-3 lg:px-6 h-14 lg:h-16 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/40 flex items-center justify-center text-xl flex-none">🔥</div>
+            <div class="min-w-0">
+                <h1 class="font-serif font-bold text-lg lg:text-xl text-white leading-none truncate">Truth or Dare</h1>
+                <span class="text-[11px] text-rose-300 font-semibold">Inferno Edition · 21+</span>
             </div>
         </div>
-    </div>
-
-    <!-- Custom Question Modal -->
-    <div id="customModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-rose-500/40 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="w-5 h-5 text-rose-400"></i> Thêm Thật/Thách Tự Tạo
-                </h3>
-                <button id="closeCustomModalBtn" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">Loại thẻ</label>
-                    <select id="customType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
-                        <option value="truth">Sự Thật (Truth)</option>
-                        <option value="dare">Thử Thách (Dare)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">Cấp độ dăm</label>
-                    <select id="customLevel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
-                        <option value="1">Cấp 1: Khởi động</option>
-                        <option value="2">Cấp 2: Tăng Nhiệt 18+</option>
-                        <option value="3">Cấp 3: Siêu Dăm Wild 21+</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">Nội dung câu hỏi/thử thách</label>
-                    <textarea id="customContent" rows="3" placeholder="Nhập ý tưởng riêng nhạy cảm/táo bạo của bạn..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-rose-500"></textarea>
-                </div>
-            </div>
-
-            <button id="saveCustomBtn" class="w-full py-3 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-rose-900/40">
-                Lưu vào trò chơi
+        <div class="flex items-center gap-1.5 lg:gap-2">
+            <button id="btnHistory" class="icon-btn" title="Lịch sử (H)" aria-label="Lịch sử"><i data-lucide="history" class="w-5 h-5"></i></button>
+            <button id="btnCustom" class="icon-btn" title="Thẻ tự tạo" aria-label="Thẻ tự tạo"><i data-lucide="plus-circle" class="w-5 h-5"></i></button>
+            <button id="btnSound" class="icon-btn" title="Âm thanh (M)" aria-label="Bật tắt âm thanh"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
+            <button id="btnSafe" class="btn h-10 px-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-red-950/60" title="Dừng ngay (S)">
+                <span>🛑</span><span>DỪNG</span>
             </button>
         </div>
     </div>
+</header>
 
-    <!-- History Log Modal -->
-    <div id="historyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-rose-500/40 shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i data-lucide="history" class="w-5 h-5 text-rose-400"></i> Lịch Sử Rút Bài
-                </h3>
-                <button id="closeHistoryModalBtn" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+<!-- ============ ỨNG DỤNG ============ -->
+<div id="app" class="hidden relative z-10 mx-auto max-w-[1600px] px-3 lg:px-6 pt-4 pb-40 lg:pb-8 grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_320px] items-start">
+
+    <!-- CỘT TRÁI: người chơi & luật -->
+    <aside id="colPlayers" class="tab-off space-y-4 lg:sticky lg:top-20">
+        <section class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="panel-title">👥 Người chơi</h2>
+                <span class="text-[11px] text-slate-500">2 đến 6 người</span>
             </div>
+            <div id="playerList" class="space-y-2.5"></div>
+            <button id="addPlayer" class="btn mt-3 w-full py-2 rounded-xl border border-dashed border-rose-500/40 text-rose-300 text-xs font-bold hover:bg-rose-500/10">+ Thêm người chơi</button>
+            <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">Bấm vào tên để sửa. Mỗi người có 1 Joker và 2 lượt đổi câu.</p>
+        </section>
 
-            <div id="historyListContainer" class="space-y-2 overflow-y-auto pr-1 my-auto flex-1 text-xs"></div>
+        <section class="glass rounded-2xl p-4">
+            <h2 class="panel-title mb-1">🤝 Giới hạn đã đồng ý</h2>
+            <p class="text-[11px] text-slate-500 mb-2">Tắt loại nào thì thẻ có loại đó sẽ không bao giờ xuất hiện.</p>
+            <div id="limits"></div>
+        </section>
 
-            <button id="clearHistoryBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition">
-                Xóa lịch sử
-            </button>
+        <section class="glass rounded-2xl p-4 space-y-3">
+            <h2 class="panel-title">⚙️ Ván chơi</h2>
+            <label class="flex items-center justify-between text-[13px] gap-3">
+                <span>Số vòng</span>
+                <select id="rounds" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-sm">
+                    <option value="5">5 vòng</option><option value="10">10 vòng</option><option value="15">15 vòng</option>
+                    <option value="20">20 vòng</option><option value="0">Không giới hạn</option>
+                </select>
+            </label>
+            <button id="newGame" class="btn w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">↺ Chơi lại từ đầu</button>
+        </section>
+    </aside>
+
+    <!-- CỘT GIỮA: sân chơi -->
+    <section id="colPlay" class="space-y-4 min-w-0">
+        <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                    <div class="text-xs text-slate-400" id="roundInfo">Vòng 1</div>
+                    <div class="font-serif text-2xl lg:text-3xl font-bold text-white truncate">Lượt của <span id="turnName" class="text-rose-400">Người 1</span></div>
+                </div>
+                <div class="text-right flex-none">
+                    <div id="lvlNow" class="text-sm font-bold text-rose-200">✨ Khởi Động</div>
+                    <div id="dblBadge" class="hidden mt-1 text-[11px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/40 rounded-full px-2 py-0.5">⚡ Điểm x2</div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="flex justify-between text-[11px] font-bold mb-1">
+                    <span class="text-amber-300">🌡️ Nhiệt độ</span><span id="heatText" class="text-slate-300">0%</span>
+                </div>
+                <div class="h-3 rounded-full bg-slate-900 overflow-hidden border border-slate-800">
+                    <div id="heatBar" class="heat-bar h-full" style="width:0%;transition:width .6s"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="levels" class="grid grid-cols-3 sm:grid-cols-6 gap-2"></div>
+
+        <div class="grid gap-4 min-[1400px]:grid-cols-2 items-start">
+            <!-- Vòng quay -->
+            <section class="glass rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="panel-title">🎡 Vòng quay số phận</h2>
+                    <span class="text-[11px] text-slate-500">Quay ra gì phải làm nấy</span>
+                </div>
+                <div class="relative mx-auto" style="width:min(78vw,340px);aspect-ratio:1">
+                    <div class="absolute left-1/2 -top-2 -translate-x-1/2 z-20 w-0 h-0 border-l-[13px] border-l-transparent border-r-[13px] border-r-transparent border-t-[24px] border-t-amber-400" style="filter:drop-shadow(0 3px 5px rgba(0,0,0,.6))"></div>
+                    <canvas id="wheel" width="640" height="640" class="w-full h-full rounded-full"></canvas>
+                </div>
+                <button id="spinBtn" class="btn mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-rose-950/50">
+                    🎲 Quay ngay <span class="hidden lg:inline text-white/60 font-medium text-xs">(Space)</span>
+                </button>
+            </section>
+
+            <!-- Thẻ bài -->
+            <section class="glass rounded-2xl p-4 min-h-[380px] flex" id="cardBox">
+                <div id="cardIdle" class="m-auto text-center space-y-3 px-2">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-rose-600/30 to-purple-600/30 border border-rose-500/40 flex items-center justify-center text-4xl floaty">💋</div>
+                    <h3 class="font-serif text-xl font-bold text-white">Rút bài hoặc quay vòng quay</h3>
+                    <p class="text-sm text-slate-400 max-w-xs mx-auto">Chọn Sự thật, Thử thách bên dưới, hoặc để vòng quay quyết định cho cả bàn.</p>
+                </div>
+
+                <div id="cardLive" class="hidden w-full flex-col gap-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <span id="cKind" class="text-xs font-extrabold px-3 py-1 rounded-full border"></span>
+                        <span id="cLvl" class="text-[11px] text-slate-300 bg-slate-800/80 px-2.5 py-1 rounded-full"></span>
+                    </div>
+                    <div id="cWho" class="flex items-center justify-center gap-2 text-sm font-bold"></div>
+                    <p id="cText" class="font-serif text-lg lg:text-xl leading-relaxed text-center text-slate-50 my-auto py-2"></p>
+                    <div id="cTags" class="flex flex-wrap justify-center gap-1.5"></div>
+
+                    <div id="timerBox" class="hidden rounded-xl bg-slate-950/70 border border-slate-800 p-3 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span id="timerText" class="text-3xl font-extrabold tabular-nums text-rose-300">00:00</span>
+                            <button id="timerBtn" class="btn px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold">▶ Bắt đầu</button>
+                        </div>
+                        <div class="h-2 rounded-full bg-slate-800 overflow-hidden"><div id="timerBar" class="heat-bar h-full" style="width:100%"></div></div>
+                    </div>
+
+                    <div class="text-center text-xs text-amber-300 font-bold" id="cPts"></div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="bDone" class="btn col-span-2 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold text-sm shadow-md shadow-emerald-950/50">✓ Xong lượt</button>
+                        <button id="bReroll" class="btn py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold">🔄 Đổi câu</button>
+                        <button id="bJoker" class="btn py-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs font-bold">🃏 Joker</button>
+                        <button id="bPen" class="btn col-span-2 py-2.5 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs font-bold">⛓️ Chịu phạt thay thử thách</button>
+                    </div>
+                    <button id="bSafe" class="text-[12px] text-slate-400 hover:text-white underline underline-offset-4 self-center">Không thoải mái? Bỏ qua ngay, không phạt</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="drawbar">
+            <div class="glass rounded-2xl p-2.5 grid grid-cols-3 gap-2.5 shadow-2xl shadow-black/60">
+                <button id="drawTruth" class="btn py-3.5 rounded-xl bg-gradient-to-b from-purple-900 to-slate-950 border border-purple-500/40 text-white font-extrabold text-sm">💬 Sự thật</button>
+                <button id="drawDare" class="btn py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-extrabold text-sm shadow-lg shadow-rose-950/50">🔥 Thử thách</button>
+                <button id="drawTeam" class="btn py-3.5 rounded-xl bg-gradient-to-b from-orange-700 to-orange-950 border border-orange-500/40 text-white font-extrabold text-sm">💋 Thách đôi</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CỘT PHẢI: nhật ký -->
+    <aside id="colLog" class="tab-off space-y-4 xl:sticky xl:top-20">
+        <section class="glass rounded-2xl p-4 flex flex-col" style="max-height:calc(100vh - 130px)">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="panel-title">📜 Nhật ký đêm nay</h2>
+                <button id="clearLog" class="text-[11px] text-slate-500 hover:text-rose-300">Xóa</button>
+            </div>
+            <div id="hist1" class="space-y-2 overflow-y-auto pr-1 text-xs min-h-[120px]"></div>
+        </section>
+        <section class="glass rounded-2xl p-4 text-[12px] text-slate-400 leading-relaxed hidden lg:block">
+            <h2 class="panel-title mb-2">⌨️ Phím tắt</h2>
+            <div class="grid grid-cols-2 gap-x-3 gap-y-1">
+                <span><kbd class="text-rose-300">Space</kbd> quay</span><span><kbd class="text-rose-300">T</kbd> sự thật</span>
+                <span><kbd class="text-rose-300">D</kbd> thử thách</span><span><kbd class="text-rose-300">Enter</kbd> xong lượt</span>
+                <span><kbd class="text-rose-300">S</kbd> dừng</span><span><kbd class="text-rose-300">Esc</kbd> đóng</span>
+            </div>
+        </section>
+    </aside>
+</div>
+
+<!-- ============ THANH ĐIỀU HƯỚNG ĐIỆN THOẠI ============ -->
+<nav id="bottomNav" class="lg:hidden fixed bottom-0 inset-x-0 z-50 glass" style="border-width:1px 0 0 0;padding-bottom:env(safe-area-inset-bottom,0px)">
+    <div class="grid grid-cols-3">
+        <button class="nav-btn on" data-tab="play"><span class="text-lg">🎡</span>Chơi</button>
+        <button class="nav-btn" data-tab="players"><span class="text-lg">👥</span>Người chơi</button>
+        <button class="nav-btn" data-tab="log"><span class="text-lg">📜</span>Nhật ký</button>
+    </div>
+</nav>
+
+<!-- ============ MODAL: HÌNH PHẠT ============ -->
+<div id="penModal" class="modal hidden">
+    <div class="glass sheet text-center space-y-4" style="max-width:380px">
+        <div class="text-4xl">⛓️</div>
+        <h3 class="text-lg font-bold text-white">Hình phạt</h3>
+        <p id="penText" class="text-rose-100 font-serif text-lg italic leading-relaxed px-1"></p>
+        <div id="penBadge" class="text-[11px] text-amber-300 bg-amber-950/40 border border-amber-800/50 py-1 px-3 rounded-full inline-block font-semibold">⚡ Được đổi 1 lần</div>
+        <div class="grid grid-cols-2 gap-2">
+            <button id="penAgain" class="btn py-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-bold">🔄 Đổi 1 lần</button>
+            <button id="penOk" class="btn py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold">Chấp nhận</button>
+        </div>
+        <button id="penSafe" class="text-[12px] text-slate-400 underline underline-offset-4">Vượt giới hạn của mình? Bỏ qua</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: THẺ TỰ TẠO ============ -->
+<div id="customModal" class="modal hidden">
+    <div class="glass sheet space-y-3">
+        <div class="flex items-center justify-between">
+            <h3 class="font-bold text-white">➕ Thẻ tự tạo</h3>
+            <button data-close="customModal" class="icon-btn" aria-label="Đóng">✕</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <select id="cuKind" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
+                <option value="truth">Sự thật</option><option value="dare">Thử thách</option>
+                <option value="duo">Thách đôi</option><option value="group">Cả nhóm</option>
+            </select>
+            <select id="cuLvl" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
+                <option value="1">Cấp 1</option><option value="2">Cấp 2</option><option value="3">Cấp 3</option><option value="4">Cấp 4</option>
+            </select>
+        </div>
+        <select id="cuTag" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
+            <option value="">Chỉ nói chuyện</option><option value="k">Có đụng chạm</option><option value="s">Có cởi đồ</option>
+            <option value="r">Có nhập vai</option><option value="p">Có đạo cụ</option><option value="d">Có đồ uống</option>
+        </select>
+        <textarea id="cuText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm" placeholder="Viết nội dung. Dùng {p} cho tên người chơi, {t} cho tên đối tượng."></textarea>
+        <button id="cuSave" class="btn w-full py-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-sm">Lưu vào trò chơi</button>
+        <div id="cuList" class="space-y-2 text-xs"></div>
+    </div>
+</div>
+
+<!-- ============ MODAL: LỊCH SỬ ============ -->
+<div id="histModal" class="modal hidden">
+    <div class="glass sheet flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+            <h3 class="font-bold text-white">📜 Lịch sử rút bài</h3>
+            <button data-close="histModal" class="icon-btn" aria-label="Đóng">✕</button>
+        </div>
+        <div id="hist2" class="space-y-2 text-xs overflow-y-auto"></div>
+    </div>
+</div>
+
+<!-- ============ MODAL: KẾT THÚC ============ -->
+<div id="endModal" class="modal hidden">
+    <div class="glass sheet space-y-4 text-center" style="max-width:480px">
+        <div class="text-4xl">🏆</div>
+        <h3 class="font-serif text-2xl font-bold text-white">Kết thúc đêm nay</h3>
+        <div id="endList" class="space-y-2 text-left"></div>
+        <div class="grid grid-cols-2 gap-2">
+            <button data-close="endModal" class="btn py-3 rounded-xl bg-slate-800 text-slate-200 text-sm font-bold">Xem lại</button>
+            <button id="endAgain" class="btn py-3 rounded-xl bg-rose-600 text-white text-sm font-bold">Chơi ván mới</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const gameData = {
-            1: {
-                truth: [
-                    "Ấn tượng đầu tiên quyến rũ nhất của bạn về người ấy là gì?",
-                    "Bộ trang phục nào người ấy mặc khiến bạn thấy khao khát nhất?",
-                    "Kỷ niệm lãng mạn & quyến rũ nhất của hai bạn từ trước tới nay?",
-                    "Bộ phận nào trên cơ thể đối phương làm bạn thích ngắm nhìn nhất?",
-                    "Nếu dùng 3 từ để miêu tả sự quyến rũ của người đối diện, bạn chọn từ gì?",
-                    "Lần gần đây nhất bạn cảm thấy thèm muốn một nụ hôn nồng cháy của người ấy là khi nào?",
-                    "Cử chỉ nhỏ nào của người ấy có thể khiến bạn 'tan chảy' ngay lập tức?",
-                    "Bạn thích phong cách quyến rũ e ấp hay phóng khoáng khoe đường cong?",
-                    "Nụ hôn dài nhất bạn từng trải qua cùng người ấy kéo dài bao lâu?",
-                    "Mùi hương nước hoa hay mùi cơ thể tự nhiên nào của người ấy làm bạn mê mẩn nhất?",
-                    "Bạn có từng giả vờ ngủ để được người ấy ôm hoặc hôn chưa?",
-                    "Khi ở bên nhau, hành động nắm tay hay ôm từ đằng sau làm bạn rung động hơn?",
-                    "Điều gì ở người đối diện khiến bạn cảm thấy tự tin và cuốn hút hơn mỗi khi đi bên cạnh?",
-                    "Có bộ phim hay phân đoạn lãng mạn nào bạn từng xem và ước được diễn lại cùng người ấy không?",
-                    "Điểm nào ở nụ cười hoặc ánh mắt của đối phương làm bạn xao xuyến nhất?"
-                ],
-                dare: [
-                    "Hôn nhẹ lên cổ người bên cạnh và giữ nguyên trong 10 giây.",
-                    "Thì thầm vào tai đối phương 3 điều bạn thấy quyến rũ nhất ở họ.",
-                    "Nhìn thẳng vào mắt người chỉ định trong 45 giây mà không được chớp mắt hay cười.",
-                    "Mát-xa vai và cổ nhẹ nhàng cho người bên cạnh trong vòng 1 phút.",
-                    "Trao một nụ hôn sâu lên mu bàn tay hoặc cổ tay đối phương.",
-                    "Ghé sát mặt người ấy chỉ cách 2cm và giữ nguyên tư thế trong 15 giây.",
-                    "Dùng ngón tay vuốt nhẹ mái tóc đối phương và dành một lời khen thật ngọt ngào.",
-                    "Cho người bên cạnh tự do cài đặt hình nền điện thoại của bạn trong 5 phút.",
-                    "Trao cho người bên trái một cái ôm thật chặt kéo dài 20 giây.",
-                    "Đứng đối diện và thực hiện một điệu nhảy quyến rũ ngắn 15 giây.",
-                    "Dùng một ngón tay di nhẹ từ cằm xuống xương đòn của người bên cạnh.",
-                    "Dùng đầu lưỡi liếm nhẹ một đường mỏng trên cằm hoặc gò má của người ấy.",
-                    "Vừa nắm chặt tay đối phương vừa thủ thầm lời tỏ tình nóng bỏng nhất bạn nghĩ ra."
-                ]
-            },
-            2: {
-                truth: [
-                    "Suy nghĩ táo bạo hay tưởng tượng ngượng ngùng nhất của bạn về đối phương là gì?",
-                    "Không gian hay địa điểm độc lạ nào bạn từng ao ước được 'thân mật' thử một lần?",
-                    "Hành động hay ánh mắt nào của đối phương khiến bạn hưng phấn ngay tức thì?",
-                    "Lần gần đây nhất bạn có suy nghĩ 18+ nóng bỏng về người ấy là khi nào?",
-                    "Sở thích hay khao khát thầm kín nào trong chuyện tình cảm bạn chưa từng tiết lộ?",
-                    "Bạn thích thế chủ động áp đảo hay bị động nung nấu khi cả hai ở không gian riêng tư?",
-                    "Âm thanh hay lời nói thì thầm nào của người ấy khiến bạn rạo rực nhất?",
-                    "Trang phục lót hay đồ ngủ kiểu nào bạn thấy khơi gợi cảm xúc nhất?",
-                    "Bạn có từng lén nhìn ngắm cơ thể người ấy khi họ đang thay đồ chưa?",
-                    "Kỹ năng hay cử chỉ lãng mạn nào của đối phương làm bạn gục ngã hoàn toàn?",
-                    "Nếu được yêu cầu người ấy mặc một bộ trang phục sexy bất kỳ đêm nay, bạn chọn gì?",
-                    "Bạn thích một nụ hôn nhẹ nhàng hay một nụ hôn kiểu Pháp nồng cháy ngấu nghiến?",
-                    "Có trò chơi nhập vai (roleplay) nào bạn thầm ao ước thử cùng người ấy không?",
-                    "Nơi nhạy cảm nào trên cơ thể mà bạn thích được đối phương chạm tới nhất?",
-                    "Bạn đã từng mơ thấy một giấc mơ vô cùng 'nóng bỏng' với đối phương chưa? Hãy kể chi tiết!",
-                    "Thời điểm nào trong ngày khiến bạn cảm thấy rạo rực và thèm muốn người ấy nhất?",
-                    "Điều gì bạn muốn người ấy thử áp dụng trong những đêm thân mật tới?"
-                ],
-                dare: [
-                    "Hôn lên 3 vị trí nhạy cảm bất kỳ trên cơ thể đối phương (trừ môi).",
-                    "Dùng răng tháo bỏ một món đồ nhỏ (tất, trang sức, áo khoác...) trên người đối phương.",
-                    "Dùng khăn che mắt đối phương và hôn nhẹ lên 3 điểm ngẫu nhiên để họ đoán.",
-                    "Ngồi vào lòng đối phương và thì thầm một điều cực kỳ táo bạo bạn muốn làm đêm nay.",
-                    "Tạo 3 dáng quyến rũ gợi cảm để đối phương chụp lại bằng điện thoại.",
-                    "Dùng đầu ngón tay lướt chậm từ cổ xuống eo người bên cạnh.",
-                    "Thực hiện một nụ hôn kiểu Pháp nồng cháy kéo dài ít nhất 25 giây.",
-                    "Tự tháo bớt 1 món đồ trang phục trên người mình ngay lập tức.",
-                    "Đặt tay người ấy lên vị trí nhịp tim bạn đang đập và nhìn sâu vào mắt họ.",
-                    "Kéo sát đối phương lại và cắn nhẹ vào dái tai của họ.",
-                    "Ghé sát tai đối phương và thở nhẹ từng hơi ấm nồng nàn trong 15 giây.",
-                    "Dùng ngón tay vẽ một hình trái tim nóng bỏng lên đùi đối phương.",
-                    "Để đối phương tự tay cởi chiếc cúc áo/khóa kéo đầu tiên trên người bạn.",
-                    "Nằm ngửa ra và cho phép đối phương dùng môi mơn trớn quanh vùng cổ trong 30 giây."
-                ]
-            },
-            3: {
-                truth: [
-                    "Trải nghiệm cuồng nhiệt và 'dăm' nhất của bạn từ trước đến nay là gì?",
-                    "Có kịch bản thân mật 21+ nào bạn khao khát được thực hiện ngay đêm nay?",
-                    "Điều gì đối phương làm khi ở trên giường khiến bạn mê mẩn không thể cưỡng lại?",
-                    "Tư thế hay hành động nào làm bạn cảm thấy thăng hoa và hưng phấn đỉnh điểm?",
-                    "Bạn thích không gian nến mờ ảo, ánh đèn huyền ảo hay tối đen hoàn toàn khi 'yêu'?",
-                    "Vùng nhạy cảm nhất trên cơ thể bạn muốn đối phương mơn trớn ngay lúc này?",
-                    "Bạn đã từng thử sử dụng đồ chơi người lớn, gel tạo cảm giác hay dầu mát-xa chưa?",
-                    "Ranh giới táo bạo nhất bạn sẵn sàng vượt qua cùng người mình yêu là gì?",
-                    "Âm thanh hưng phấn nồng nàn nhất bạn từng phát ra khi bên người ấy?",
-                    "Khao khát mãnh liệt nhất bạn ước đối phương chủ động thực hiện tối nay?",
-                    "Nếu đêm nay là một đêm 'không giới hạn', bạn muốn cùng người ấy thử mấy lần?",
-                    "Có địa điểm riêng tư mạo hiểm nào bạn từng muốn thử cảm giác 'yêu' chưa?",
-                    "Bạn thích cảm giác bị cắn nhẹ, vuốt ve mơn trớn hay sự cuồng nhiệt áp đảo hơn?",
-                    "Trang phục hay phụ kiện cực dăm nào bạn muốn người ấy khoác lên người đêm nay?",
-                    "Hãy miêu tả chi tiết cảm giác lần gần nhất hai bạn đưa nhau lên đỉnh thăng hoa?",
-                    "Nếu được chọn 1 hình phạt cực dăm riêng tư áp đặt lên đối phương đêm nay, bạn chọn gì?",
-                    "Tưởng tượng nhạy cảm nhất của bạn khi nhìn thấy đối phương bước ra từ phòng tắm?",
-                    "Điều gì trong lúc cuồng nhiệt có thể khiến bạn phát điên lên vì sung sướng?"
-                ],
-                dare: [
-                    "Thực hiện một điệu nhảy quyến rũ nóng bỏng (lap-dance) cho đối phương trong 1 phút.",
-                    "Trao một nụ hôn kiểu Pháp cực kỳ nồng nàn sâu lắng kéo dài ít nhất 40 giây.",
-                    "Cho phép đối phương đặt ra 1 quy tắc thân mật bạn phải tuân theo trong 15 phút tới.",
-                    "Dùng một viên đá lạnh di chuyển từ từ quanh vùng cổ, xương đòn và ngực người ấy.",
-                    "Cởi bớt 2 món đồ trên người và trao một nụ hôn cháy bỏng.",
-                    "Thì thầm chi tiết từng bước kịch bản 21+ bạn muốn thực hiện cùng người ấy đêm nay.",
-                    "Dùng môi chạm nhẹ và hôn dọc từ vùng cổ xuống bụng người đối diện trong 20 giây.",
-                    "Thực hiện hành động cắn nhẹ lên vai và vuốt ve hông của người bên cạnh.",
-                    "Mát-xa nhẹ nhàng bằng kem/dầu lên vùng đùi hoặc cổ người ấy vô cùng gợi cảm.",
-                    "Nằm xuống và cho phép đối phương hôn lên bất kỳ chỗ nào họ thích trong 30 giây.",
-                    "Tháo chiếc cúc áo hoặc món đồ lót đầu tiên dưới sự quan sát trực tiếp của đối phương.",
-                    "Dùng đầu lưỡi mơn trớn dái tai và vùng cổ đối phương kèm theo những tiếng thở dài quyến rũ.",
-                    "Quỳ xuống trước mặt đối phương, nhìn đắm đuối và dành 3 lời khen cực kỳ khiêu khích.",
-                    "Dùng hai tay ôm chặt hông đối phương và thực hiện 5 nhịp ép sát cơ thể vô cùng nóng bỏng."
-                ]
-            }
-        };
+<!-- ============ OVERLAY: DỪNG KHẨN CẤP ============ -->
+<div id="safeOverlay" class="modal hidden" style="z-index:90;background:rgba(2,6,12,.96)">
+    <div class="text-center max-w-sm space-y-5">
+        <div class="text-5xl">🛑</div>
+        <h2 class="font-serif text-3xl font-bold text-white">Đã tạm dừng</h2>
+        <p class="text-slate-300 leading-relaxed">Hít thở sâu, uống chút nước và hỏi nhau: <b class="text-white">“Bạn đang thấy thế nào?”</b> Dừng lại luôn là quyền của mỗi người. Không cần giải thích.</p>
+        <div class="grid gap-2">
+            <button id="safeResume" class="btn py-3.5 rounded-xl bg-emerald-600 text-white font-bold">Cả hai đã ổn, tiếp tục</button>
+            <button id="safeEnd" class="btn py-3 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">Kết thúc trò chơi</button>
+        </div>
+    </div>
+</div>
 
-        const penalties = [
-            "Uống trọn 1 ngụm đồ uống cực mạnh hoặc làm cạn ly!",
-            "Cởi bớt 1 món đồ trang phục bất kỳ trên người ngay lập tức.",
-            "Cho phép người đối diện hôn lên một vị trí nhạy cảm tự chọn trên người bạn.",
-            "Cho phép đối phương dùng son vẽ một ký hiệu quyến rũ/khiêu khích lên người bạn.",
-            "Thực hiện 15 lần chống đẩy hoặc 20 lần gập bụng đầy quyến rũ.",
-            "Đóng vai người phục vụ tuân theo 1 yêu cầu nhỏ của đối phương trong 10 phút.",
-            "Bị đối phương kit nốt cúc áo tiếp theo hoặc kéo một phần khóa kéo.",
-            "Để đối phương thổi hơi ấm cực nhạy cảm vào vùng cổ trong 20 giây mà không được cựa quậy.",
-            "Nằm yên cho đối phương kit một vết hôn nhẹ (hickey) lên vị trí ngẫu nhiên.",
-            "Chịu phạt ngắt lời: Phải gọi đối phương bằng 'Chủ nhân' hoặc 'Bảo bối' trong 3 lượt tiếp theo.",
-            "Dùng môi chuyển một viên đá/trái cây nhỏ sang miệng của đối phương.",
-            "Thực hiện điệu catwalk sexy vòng quanh phòng trong 30 giây."
-        ];
+<!-- ============ TOAST ============ -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 rounded-xl glass text-sm font-semibold text-white shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90vw] text-center" style="top:76px"></div>
 
-        let playerCount = 2;
-        let playerNames = ["Người 1", "Người 2", "Người 3", "Người 4"];
-        let currentTurnIndex = 0;
-        let selectedLevel = '1';
-        let soundEnabled = true;
-        let isFlipped = false;
-        let timerInterval = null;
-        let currentCardType = null;
-        let historyLog = [];
+<script>
+/* =====================================================================
+   DỮ LIỆU THẺ BÀI
+   {p} = người đang chơi, {t} = đối tượng (người được chỉ định)
+   Nhãn: k=đụng chạm, s=cởi đồ, r=nhập vai, p=đạo cụ, d=đồ uống
+   Thẻ có nhãn nào bị tắt trong "Giới hạn" thì sẽ không bao giờ xuất hiện.
+   ===================================================================== */
+const T = (t, g = '') => ({ t, g });
+const D = (t, s = 0, g = '') => ({ t, s, g });
 
-        // Penalty 1-Reroll tracker
-        let hasRerolledPenalty = false;
+const DATA = {
+  truth: {
+    1: [
+      T("Ấn tượng đầu tiên khiến bạn bị {t} cuốn hút là gì?"),
+      T("Bộ trang phục nào của {t} khiến bạn không thể rời mắt?"),
+      T("Khoảnh khắc lãng mạn nhất bạn từng có (hoặc muốn có) với {t} là gì?"),
+      T("Chỉ được chọn 3 từ để tả sức hút của {t}, bạn chọn những từ nào?"),
+      T("Cử chỉ nhỏ nào của {t} làm bạn tan chảy ngay lập tức?"),
+      T("Mùi hương nào của {t} khiến bạn muốn lại gần hơn?"),
+      T("Lần nào bạn lén nhìn {t} lâu hơn mức bình thường? Kể lại đi."),
+      T("Nụ hôn đáng nhớ nhất của bạn diễn ra ở đâu, trong hoàn cảnh nào?"),
+      T("Bạn thích được ôm từ phía sau hay ôm đối mặt? Vì sao?"),
+      T("Điều gì ở ánh mắt hoặc nụ cười của {t} làm bạn xao xuyến nhất?"),
+      T("Lần gần nhất bạn đỏ mặt vì lời nói hay hành động của ai đó là khi nào?"),
+      T("Buổi hẹn hò hoàn hảo với {t} trong đầu bạn diễn ra thế nào?"),
+      T("Bạn đã bao giờ soạn một tin nhắn cho {t} rồi xóa vì ngại chưa? Nội dung là gì?"),
+      T("Điều gì khiến bạn thấy mình quyến rũ nhất?"),
+    ],
+    2: [
+      T("Suy nghĩ táo bạo nhất bạn từng có về {t} là gì?"),
+      T("Chỗ nào trên người {t} bạn thích được chạm vào nhất?"),
+      T("Hành động nào của {t} làm tim bạn đập nhanh ngay lập tức?"),
+      T("Lần gần nhất bạn mơ thấy {t} theo kiểu nóng bỏng là khi nào? Kể phần bạn dám kể."),
+      T("Kiểu đồ ngủ hoặc đồ lót nào bạn thấy cuốn hút nhất ở một người?"),
+      T("Bạn thích nụ hôn chậm rãi hay nồng cháy vồ vập?"),
+      T("Bạn từng tưởng tượng {t} mặc bộ đồ nào đến mức choáng váng?"),
+      T("Lời thì thầm nào của {t} làm bạn rạo rực nhất?"),
+      T("Có trò nhập vai nào bạn thầm muốn thử cùng {t} không?"),
+      T("Bạn thích chủ động dẫn dắt hay được dẫn dắt hơn? Cho một ví dụ."),
+      T("Thời điểm nào trong ngày bạn nhớ {t} nhiều nhất?"),
+      T("Nơi lạ nào bạn từng mơ có một nụ hôn nồng cháy?"),
+      T("Điều gì liên quan đến {t} khiến bạn ghen hoặc nóng máu nhất?"),
+      T("Cho {t} điểm từ 1 đến 10 về khoản hôn, và nói lý do cho con số đó."),
+    ],
+    3: [
+      T("Trải nghiệm nóng bỏng nhất bạn từng có là gì? Kể ở mức bạn thấy thoải mái."),
+      T("Kịch bản nào bạn muốn thực hiện cùng {t} vào đêm nay? Hãy miêu tả."),
+      T("Điều gì {t} làm khiến bạn không thể cưỡng lại?"),
+      T("Bạn thích ánh nến mờ, đèn màu hay bóng tối hoàn toàn trong khoảnh khắc riêng tư?"),
+      T("Chỗ nào khiến bạn rùng mình khi chỉ bị chạm nhẹ?"),
+      T("Bạn từng thử dầu massage, nến thơm hay khăn bịt mắt với ai chưa? Cảm giác thế nào?", "p"),
+      T("Ranh giới táo bạo nhất bạn sẵn sàng cùng {t} bước qua là gì?"),
+      T("Câu nào {t} thì thầm sẽ làm bạn mất kiểm soát?"),
+      T("Trang phục hay phụ kiện nào bạn muốn {t} mặc riêng cho bạn xem?"),
+      T("Bạn muốn {t} chủ động làm nhiều hơn điều gì?"),
+      T("Khoảnh khắc nào với {t} bạn nhớ mãi vì quá cháy?"),
+      T("Nếu được đặt một luật cho {t} trong 10 phút tối nay, bạn đặt luật gì?", "r"),
+      T("{t} quyến rũ nhất lúc nào: vừa tắm xong, mặc đồ ngủ hay vừa thức dậy?"),
+      T("Điều gì trong giây phút thân mật khiến bạn thấy được yêu thương và an toàn nhất?"),
+    ],
+    4: [
+      T("Điều gì bạn muốn thử cùng {t} nhưng chưa dám nói ra?"),
+      T("Miêu tả đêm hoàn hảo với {t}, từ lúc bước vào phòng. Bạn dám kể tới đâu?"),
+      T("Bạn muốn {t} gọi bạn bằng biệt danh nào khi ở riêng?"),
+      T("Nếu {t} trao cho bạn toàn quyền trong 15 phút, bạn sẽ làm gì đầu tiên?", "r"),
+      T("Tưởng tượng cuồng nhiệt nhất bạn từng có về {t} là gì?"),
+      T("Nơi mạo hiểm nhất bạn muốn có một khoảnh khắc riêng cùng {t} (trong tưởng tượng)?"),
+      T("Điều gì chỉ cần một cái chạm là khiến bạn mất bình tĩnh?"),
+      T("{t} nên làm gì nhiều hơn để đốt cháy bạn?"),
+      T("Bạn thích bị bất ngờ, bị trêu chọc chậm rãi hay bị ép sát bằng sự nồng nhiệt?"),
+      T("Nếu tối nay không ai làm phiền, bạn muốn {t} làm điều gì đầu tiên?"),
+      T("Tiết lộ một điều về gu của bạn mà {t} chưa biết."),
+      T("Món nào trên người {t} bạn muốn tự tay cởi ra nhất, và vì sao?", "s"),
+      T("Bạn muốn nghe {t} nói câu nào bên tai mình nhất?"),
+      T("Lời khen nóng bỏng nhất bạn chưa từng dám nói với {t} là gì? Nói luôn bây giờ."),
+    ],
+  },
+  dare: {
+    1: [
+      D("Hôn nhẹ lên mu bàn tay {t} và nhìn vào mắt họ.", 0, "k"),
+      D("Thì thầm vào tai {t} 3 điều bạn thấy quyến rũ nhất ở họ.", 0, "k"),
+      D("Nhìn thẳng vào mắt {t} trong 30 giây, không được cười hay chớp mắt.", 30),
+      D("Massage vai cho {t} trong 1 phút.", 60, "k"),
+      D("Ôm {t} thật chặt trong 20 giây và nói một lời khen thật ngọt.", 20, "k"),
+      D("Nắm tay {t} và kể một kỷ niệm đẹp của hai người.", 0, "k"),
+      D("Ghé mặt sát {t}, chỉ cách 5cm, giữ nguyên 10 giây rồi tự quyết định làm gì tiếp.", 10, "k"),
+      D("Vuốt tóc {t} và nói một câu tán tỉnh bằng giọng thật trầm.", 0, "k"),
+      D("Để {t} chọn hình nền điện thoại của bạn cho đến hết ván chơi."),
+      D("Nhảy một điệu quyến rũ 15 giây trước mặt {t}.", 15),
+      D("Dùng ngón tay viết một lời tỏ tình lên lòng bàn tay {t} để họ đoán.", 0, "k"),
+      D("Hôn gió ba lần, mỗi lần một ánh mắt khác nhau, để {t} chấm điểm."),
+      D("Đút cho {t} một miếng đồ ăn hoặc thức uống thật lãng mạn.", 0, "p"),
+      D("Đóng vai người lạ vừa gặp {t} ở quán bar và mở lời tán tỉnh trong 30 giây.", 30, "r"),
+    ],
+    2: [
+      D("Hôn lên 3 chỗ bất kỳ trên cổ hoặc vai {t}, không hôn môi.", 0, "k"),
+      D("Dùng răng cởi một món phụ kiện nhỏ của {t} (tất, khăn, vòng tay).", 0, "sk"),
+      D("Bịt mắt {t} và hôn nhẹ 3 điểm ngẫu nhiên để họ đoán đúng chỗ.", 0, "pk"),
+      D("Ngồi vào lòng {t} và thì thầm điều táo bạo bạn muốn làm cùng họ.", 30, "kr"),
+      D("Làm 3 dáng quyến rũ khác nhau để {t} chấm điểm từ 1 đến 10."),
+      D("Dùng đầu ngón tay lướt chậm từ cổ xuống eo {t}.", 20, "k"),
+      D("Trao {t} một nụ hôn kiểu Pháp kéo dài ít nhất 25 giây.", 25, "k"),
+      D("Cởi bớt 1 món trên người mình (áo khoác, tất, thắt lưng...).", 0, "s"),
+      D("Đặt tay {t} lên tim bạn cho họ nghe nhịp đập, nhìn sâu vào mắt nhau 15 giây.", 15, "k"),
+      D("Cắn nhẹ dái tai {t}.", 0, "k"),
+      D("Thổi hơi ấm vào tai hoặc cổ {t} trong 15 giây, {t} không được cựa quậy.", 15, "k"),
+      D("Vẽ một trái tim lên đùi {t} bằng đầu ngón tay.", 0, "k"),
+      D("Để {t} tự tay mở chiếc cúc hoặc khóa kéo đầu tiên trên người bạn.", 0, "sk"),
+      D("Nằm xuống cho {t} hôn quanh vùng cổ trong 30 giây.", 30, "k"),
+    ],
+    3: [
+      D("Nhảy lap-dance ngắn (mặc nguyên đồ) trước mặt {t} trong 1 phút.", 60, "r"),
+      D("Trao {t} một nụ hôn kiểu Pháp nồng nàn kéo dài ít nhất 40 giây.", 40, "k"),
+      D("Cho {t} đặt 1 luật thân mật, bạn phải tuân theo trong 10 phút (trong giới hạn đã đồng ý).", 0, "r"),
+      D("Dùng viên đá lạnh lướt từ cổ xuống xương đòn của {t}.", 30, "pk"),
+      D("Cởi bớt 2 món trên người rồi trao {t} một nụ hôn cháy bỏng.", 0, "sk"),
+      D("Thì thầm vào tai {t} từng bước kịch bản bạn muốn cho đêm nay.", 30, "kr"),
+      D("Hôn dọc từ cổ xuống vai {t} thật chậm trong 20 giây.", 20, "k"),
+      D("Cắn nhẹ lên vai và vuốt ve hông {t} trong 15 giây.", 15, "k"),
+      D("Massage vai, cổ hoặc đùi {t} bằng kem hoặc dầu trong 1 phút.", 60, "pk"),
+      D("Nằm xuống và để {t} hôn bất cứ đâu họ thích (trong giới hạn) trong 30 giây.", 30, "k"),
+      D("Cởi từng chiếc cúc áo của chính bạn thật chậm dưới ánh mắt của {t}.", 30, "s"),
+      D("Quỳ trước mặt {t}, nhìn thẳng vào mắt và nói 3 lời khen thật khiêu khích.", 0, "r"),
+      D("Ôm chặt eo {t}, áp sát người và nhìn môi nhau 10 giây trước khi hôn.", 10, "k"),
+      D("Đút cho {t} một viên trái cây hoặc sô-cô-la bằng môi.", 0, "pk"),
+    ],
+    4: [
+      D("Để {t} bịt mắt bạn rồi trêu chọc bằng đầu ngón tay và hơi thở ở cổ, vai, tay trong 45 giây.", 45, "pk"),
+      D("Cởi áo (hoặc một lớp áo) của mình và để {t} ngắm bạn trong 20 giây.", 20, "s"),
+      D("Hôn chậm rãi từ cổ xuống bụng {t} trong 30 giây.", 30, "k"),
+      D("Để {t} ra 3 mệnh lệnh liên tiếp, bạn thực hiện hết (trừ điều vượt giới hạn).", 0, "r"),
+      D("Cởi phụ kiện hoặc tất của {t} bằng miệng.", 0, "sk"),
+      D("Trao cho {t} quyền làm chủ trong 5 phút: bạn nghe theo mọi yêu cầu trong giới hạn.", 300, "r"),
+      D("Hôn {t} thật nồng nàn 60 giây, không được là người dừng trước.", 60, "k"),
+      D("Luân phiên đá lạnh và hơi ấm lướt quanh cổ, lưng, bụng {t}.", 60, "pk"),
+      D("Cởi thêm 2 món trên người, bạn tự chọn món nào.", 0, "s"),
+      D("Đứng sau lưng {t}, ôm eo, hôn nhẹ lên gáy và thì thầm điều bạn khao khát.", 30, "kr"),
+      D("Nằm xuống nhắm mắt: {t} khám phá cổ, vai, tay, bụng bạn bằng môi và ngón tay trong 60 giây.", 60, "k"),
+      D("Nhập vai 2 phút: bác sĩ và bệnh nhân, sếp và nhân viên, hoặc hai người lạ ở quán bar. Tự chọn.", 120, "r"),
+      D("Uống một ngụm nước hoặc rượu rồi chuyển sang miệng {t} bằng một nụ hôn.", 0, "dpk"),
+      D("Trao {t} tấm phiếu một đêm: họ viết ra một mong muốn (trong giới hạn) và bạn thực hiện trong hôm nay.", 0, "r"),
+    ],
+  },
+  duo: {
+    1: [
+      D("{p} và {t} đút nhau ăn hoặc uống một thứ gì đó, mắt không rời nhau.", 0, "p"),
+      D("{p} và {t} nắm tay, thay phiên nói 3 điều mình thích ở nhau."),
+      D("{p} và {t} ôm nhau 30 giây, nhắm mắt lắng nghe nhịp tim.", 30, "k"),
+      D("{p} và {t} thi nhìn nhau không cười trong 30 giây. Ai cười trước bị phạt nhẹ.", 30),
+    ],
+    2: [
+      D("{p} và {t} thay phiên hôn lên cổ nhau, mỗi người 15 giây.", 30, "k"),
+      D("{p} và {t} khiêu vũ chậm sát người theo một bài hát bất kỳ trong 1 phút.", 60, "k"),
+      D("{p} và {t} thì thầm cho nhau một bí mật táo bạo mà không ai khác được nghe.", 0, "r"),
+      D("{p} massage tay cho {t} 30 giây rồi đổi vai.", 60, "k"),
+    ],
+    3: [
+      D("{p} và {t} hôn nồng cháy 45 giây. Ai dừng trước là thua.", 45, "k"),
+      D("{p} và {t} thay phiên cởi 1 món trên người nhau, dưới ánh mắt của nhau.", 0, "sk"),
+      D("{p} bịt mắt {t}, {t} phải đoán 3 điểm chạm của {p}.", 0, "pk"),
+      D("{p} và {t} cùng viết ra một điều khao khát ra giấy, rồi đọc to cùng lúc.", 0, "r"),
+    ],
+    4: [
+      D("{p} và {t} vào chế độ riêng tư 3 phút: đèn mờ, nhạc chậm, mọi thứ tùy hai người (trong giới hạn).", 180, "kr"),
+      D("{p} và {t} thay phiên trêu chọc nhau bằng đá lạnh và hơi thở ở cổ, vai, bụng, mỗi người 45 giây.", 90, "pk"),
+      D("{p} và {t} cùng cởi 2 món trên người nhau trong 1 phút.", 60, "sk"),
+      D("{p} và {t} chọn một lời hứa cho đêm nay và ký giao ước bằng một nụ hôn.", 0, "kr"),
+    ],
+  },
+  group: {
+    1: [
+      D("Cả bàn đếm ngược 3-2-1 rồi cùng chỉ người quyến rũ nhất tối nay. Người nhận nhiều phiếu nhất kể một chuyện hẹn hò khó quên."),
+      D("Mỗi người khen một điều thật lòng về người ngồi bên phải mình."),
+      D("Mỗi người kể một điều khiến mình rung động ở lần gặp đầu tiên với người yêu hoặc crush."),
+    ],
+    2: [
+      D("Mỗi người thì thầm một lời khen táo bạo vào tai người bên trái.", 0, "k"),
+      D("Chơi 'Tôi chưa từng' 3 câu kiểu 18+. Ai từng làm thì uống 1 ngụm.", 0, "d"),
+      D("Cả bàn bình chọn ai hôn giỏi nhất. Người thắng chọn ai đó để tặng một cái ôm 10 giây.", 10, "k"),
+    ],
+    3: [
+      D("{p} nói một câu 'Tôi chưa từng...' thật táo bạo. Ai từng làm thì uống 1 ngụm hoặc cởi 1 phụ kiện.", 0, "d"),
+      D("Cả bàn chấm điểm độ quyến rũ của {p} từ 1 đến 10 và giải thích từng con số."),
+      D("{p} chọn 2 người hôn nhau 10 giây. Cả hai đều có quyền từ chối.", 10, "k"),
+    ],
+    4: [
+      D("Mỗi người viết một điều táo bạo lên giấy, bốc ngẫu nhiên. Người bốc thực hiện, ai cũng có quyền từ chối.", 0, "r"),
+      D("Cả bàn cùng ra một hành động cho {p}. {p} chọn: làm theo hoặc chịu phạt.", 0, "r"),
+      D("{p} chọn một người, hai bên thay phiên thì thầm điều mình muốn làm với nhau tối nay.", 60, "kr"),
+    ],
+  },
+};
 
-        const ageModal = document.getElementById('ageModal');
-        const confirmAgeBtn = document.getElementById('confirmAgeBtn');
-        const appContainer = document.getElementById('appContainer');
+/* Lá bùa: hiệu ứng đặc biệt (e = effect) */
+const WILD = [
+  { t: "🃏 ĐỔI CHỖ: {p} chỉ định {t} chơi lượt kế tiếp. Trước khi đổi, hai người trao nhau một cái ôm 10 giây.", e: "swap", g: "k" },
+  { t: "🃏 NHÂN ĐÔI: thẻ kế tiếp của cả bàn được gấp đôi điểm, và gấp đôi độ ngại!", e: "double" },
+  { t: "🃏 ĐẢO CHIỀU: thứ tự lượt chơi bị đảo ngược. {p} tặng một lời khen cho người sắp chơi tiếp theo.", e: "reverse" },
+  { t: "🃏 MIỄN PHẠT: {p} nhận thêm 1 Joker (bỏ qua không mất điểm, không phạt).", e: "joker" },
+  { t: "🃏 QUYỀN LỰC: {t} ra một lệnh dễ thương cho {p} (trong giới hạn đã đồng ý), {p} thực hiện ngay.", e: "", g: "r" },
+  { t: "🃏 GIẢI LAO NGỌT NGÀO: {p} và {t} uống nước, ôm nhau 10 giây và hỏi nhau 'Bạn đang thấy thế nào?'. Nhiệt độ giảm 15%.", e: "cool" },
+  { t: "🃏 HÂM NÓNG: nhiệt độ tăng 15%! {p} nói một lời tán tỉnh táo bạo với {t} bằng giọng thì thầm.", e: "heat" },
+  { t: "🃏 KHÁN GIẢ CHẤM ĐIỂM: {p} khen {t} thật lãng mạn trong 20 giây, cả bàn chấm từ 1 đến 10.", e: "" },
+  { t: "🃏 LUẬT MỚI: {p} đặt một luật vui cho cả bàn trong 3 lượt tới (ví dụ: gọi nhau bằng biệt danh).", e: "" },
+  { t: "🃏 TÁO BẠO HAY TỬ TẾ: {t} chọn cho {p} một trong hai: một lời thú nhận ngại ngùng, hoặc một nụ hôn lên má.", e: "", g: "k" },
+];
 
-        const mode2Btn = document.getElementById('mode2Btn');
-        const mode4Btn = document.getElementById('mode4Btn');
-        const playerListDisplay = document.getElementById('playerListDisplay');
-        const toggleEditPlayersBtn = document.getElementById('toggleEditPlayersBtn');
-        const playerEditForm = document.getElementById('playerEditForm');
-        const playerInputsGrid = document.getElementById('playerInputsGrid');
-        const savePlayersBtn = document.getElementById('savePlayersBtn');
-        const spinRandomPlayerBtn = document.getElementById('spinRandomPlayerBtn');
+/* Hình phạt theo mức: 1 nhẹ, 2 vừa, 3 nặng */
+const PEN = {
+  1: [
+    D("Uống một ngụm nước (hoặc đồ uống) thật chậm rãi.", 0, "d"),
+    D("Khen {t} 3 câu thật ngọt và nhìn thẳng vào mắt họ."),
+    D("Làm 10 cái squat với ánh mắt quyến rũ.", 0),
+    D("Catwalk 20 giây quanh phòng.", 20),
+    D("Gọi {t} bằng biệt danh do {t} chọn trong 2 lượt tới."),
+  ],
+  2: [
+    D("Cho {t} vẽ một ký hiệu bằng bút hoặc son lên tay bạn.", 0, "p"),
+    D("Hôn lên chỗ {t} chọn (má, cổ hoặc tay).", 0, "k"),
+    D("Cởi 1 món phụ kiện.", 0, "s"),
+    D("Làm người phục vụ của {t} trong 5 phút.", 300, "r"),
+    D("{t} thì thầm cho bạn một hình phạt bí mật và bạn thực hiện ngay.", 0, "r"),
+  ],
+  3: [
+    D("Cởi 1 món trên người.", 0, "s"),
+    D("Nằm yên cho {t} hôn lên cổ trong 20 giây.", 20, "k"),
+    D("Gọi {t} là 'chủ nhân' trong 3 lượt tới.", 0, "r"),
+    D("Để {t} bịt mắt bạn và chọn hình phạt cho bạn.", 0, "pk"),
+    D("Nhảy quyến rũ 30 giây trước mặt {t}.", 30, "r"),
+  ],
+};
 
-        const levelBtns = document.querySelectorAll('.level-btn');
-        const cardSection = document.getElementById('cardSection');
-        const cardInner = document.getElementById('cardInner');
-        const cardTurnName = document.getElementById('cardTurnName');
-        const cardCategory = document.getElementById('cardCategory');
-        const cardLevelBadge = document.getElementById('cardLevelBadge');
-        const cardPrompt = document.getElementById('cardPrompt');
+const TAGS = { k: "🤝 Đụng chạm", s: "👕 Cởi đồ", r: "🎭 Nhập vai", p: "🧊 Đạo cụ", d: "🥂 Đồ uống" };
+const LV = { 1: { n: "Khởi Động", e: "✨" }, 2: { n: "Tăng Nhiệt", e: "🔥" }, 3: { n: "Nóng Bỏng", e: "🌶️" }, 4: { n: "Cực Hạn", e: "☄️" } };
+const KIND = {
+  truth: { n: "💬 SỰ THẬT", c: "bg-purple-500/20 text-purple-200 border-purple-400/40" },
+  dare:  { n: "🔥 THỬ THÁCH", c: "bg-rose-500/20 text-rose-200 border-rose-400/40" },
+  duo:   { n: "💋 THÁCH ĐÔI", c: "bg-pink-500/20 text-pink-200 border-pink-400/40" },
+  group: { n: "🎉 CẢ NHÓM", c: "bg-orange-500/20 text-orange-200 border-orange-400/40" },
+  wild:  { n: "🃏 LÁ BÙA", c: "bg-sky-500/20 text-sky-200 border-sky-400/40" },
+};
+const COLORS = ["#e11d48", "#7c3aed", "#0891b2", "#d97706", "#059669", "#db2777"];
+const SEG = [
+  { id: "truth", label: "SỰ THẬT", emo: "💬", c1: "#7c3aed", c2: "#3b1a78" },
+  { id: "dare", label: "THỬ THÁCH", emo: "🔥", c1: "#e11d48", c2: "#7f1030" },
+  { id: "duo", label: "THÁCH ĐÔI", emo: "💋", c1: "#db2777", c2: "#7a1146" },
+  { id: "group", label: "CẢ NHÓM", emo: "🎉", c1: "#ea580c", c2: "#7c2d0a" },
+  { id: "wild", label: "LÁ BÙA", emo: "🃏", c1: "#0284c7", c2: "#0a3d5e" },
+  { id: "pen", label: "CHỊU PHẠT", emo: "⛓️", c1: "#52525b", c2: "#1c1c22" },
+  { id: "x2", label: "NHÂN ĐÔI", emo: "⚡", c1: "#d97706", c2: "#6e3d06" },
+  { id: "swap", label: "ĐỔI LƯỢT", emo: "🔄", c1: "#059669", c2: "#053f2f" },
+];
 
-        const drawTruthBtn = document.getElementById('drawTruthBtn');
-        const drawDareBtn = document.getElementById('drawDareBtn');
-        const rerollBtn = document.getElementById('rerollBtn');
-        const skipPenaltyBtn = document.getElementById('skipPenaltyBtn');
-        const completeTurnBtn = document.getElementById('completeTurnBtn');
+/* =====================================================================
+   TRẠNG THÁI & TIỆN ÍCH
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rand = n => Math.floor(Math.random() * n);
+const pick = a => a[rand(a.length)];
+const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
+const KEY = 'tod21_inferno_v2';
 
-        const timerContainer = document.getElementById('timerContainer');
-        const timerCountdown = document.getElementById('timerCountdown');
-        const timerProgress = document.getElementById('timerProgress');
+const mkPlayer = n => ({ name: n, score: 0, truths: 0, dares: 0, skips: 0, pens: 0, jokers: 1, rerolls: 2, streak: 0, best: 0 });
+const S = {
+  players: [mkPlayer('Người 1'), mkPlayer('Người 2')],
+  turn: 0, dir: 1, round: 1, maxRounds: 15, heat: 0, level: 'auto', sound: true,
+  allowed: { k: 1, s: 1, r: 1, p: 1, d: 1 },
+  double: false, used: {}, custom: [], history: [],
+  card: null, phase: 'idle', paused: false, over: false, spinning: false,
+  penTarget: null, penReroll: 1, penText: '', penTier: 1,
+};
 
-        const penaltyModal = document.getElementById('penaltyModal');
-        const penaltyText = document.getElementById('penaltyText');
-        const closePenaltyBtn = document.getElementById('closePenaltyBtn');
-        const spinPenaltyAgainBtn = document.getElementById('spinPenaltyAgainBtn');
-        const penaltyRerollBadge = document.getElementById('penaltyRerollBadge');
+function save() {
+    try {
+        localStorage.setItem(KEY, JSON.stringify({
+            names: S.players.map(p => p.name), maxRounds: S.maxRounds, level: S.level,
+            sound: S.sound, allowed: S.allowed, custom: S.custom
+        }));
+    } catch (e) { /* trình duyệt chặn lưu trữ: bỏ qua */ }
+}
+function load() {
+    try {
+        const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (!d) return;
+        if (Array.isArray(d.names) && d.names.length >= 2) S.players = d.names.slice(0, 6).map(n => mkPlayer(String(n).slice(0, 14)));
+        if (typeof d.maxRounds === 'number') S.maxRounds = d.maxRounds;
+        if (d.level) S.level = d.level;
+        if (typeof d.sound === 'boolean') S.sound = d.sound;
+        if (d.allowed) S.allowed = Object.assign(S.allowed, d.allowed);
+        if (Array.isArray(d.custom)) S.custom = d.custom;
+    } catch (e) { }
+}
+function icons() { try { window.lucide && lucide.createIcons(); } catch (e) { } }
 
-        const customModal = document.getElementById('customModal');
-        const openCustomModalBtn = document.getElementById('openCustomModalBtn');
-        const closeCustomModalBtn = document.getElementById('closeCustomModalBtn');
-        const saveCustomBtn = document.getElementById('saveCustomBtn');
+let toastTm = null;
+function toast(msg, ms = 2400) {
+    const t = $('#toast');
+    t.textContent = msg; t.style.opacity = 1;
+    clearTimeout(toastTm);
+    toastTm = setTimeout(() => t.style.opacity = 0, ms);
+}
 
-        const historyModal = document.getElementById('historyModal');
-        const historyToggleBtn = document.getElementById('historyToggleBtn');
-        const closeHistoryModalBtn = document.getElementById('closeHistoryModalBtn');
-        const historyListContainer = document.getElementById('historyListContainer');
-        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-        const soundToggle = document.getElementById('soundToggle');
+/* =====================================================================
+   ÂM THANH & RUNG
+   ===================================================================== */
+let AC = null;
+function ac() {
+    if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } }
+    if (AC && AC.state === 'suspended') AC.resume();
+    return AC;
+}
+function tone(f, d = .12, type = 'sine', v = .15, when = 0, slide = 0) {
+    if (!S.sound) return;
+    const c = ac(); if (!c) return;
+    const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + when;
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), t + d);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + .02);
+}
+const SFX = {
+    click: () => tone(420, .08, 'sine', .12, 0, -200),
+    tick: () => tone(900, .03, 'square', .04),
+    flip: () => tone(250, .16, 'triangle', .18, 0, 250),
+    win: () => { tone(523, .15, 'sine', .16); tone(659, .15, 'sine', .16, .1); tone(784, .28, 'sine', .16, .2); },
+    pen: () => tone(180, .3, 'sawtooth', .14, 0, -70),
+    alarm: () => [0, .25, .5].forEach(w => tone(880, .18, 'square', .09, w)),
+};
+const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) { } };
 
-        const spinWheelBtn = document.getElementById('spinWheelBtn');
-        const wheelCanvas = document.getElementById('wheelCanvas');
-        const wheelCtx = wheelCanvas.getContext('2d');
+/* =====================================================================
+   MODAL & TAB
+   ===================================================================== */
+const openModal = id => { $('#' + id).classList.remove('hidden'); };
+const closeModal = id => { $('#' + id).classList.add('hidden'); };
+function anyModalOpen() { return $$('.modal:not(.hidden)').some(m => m.id !== 'ageModal' || true); }
 
-        let wheelAngle = 0;
-        let isWheelSpinning = false;
+function setTab(t) {
+    $$('#app > [data-tab], #app > aside, #app > section').forEach(el => {
+        const id = el.id === 'colPlayers' ? 'players' : el.id === 'colPlay' ? 'play' : 'log';
+        el.classList.toggle('tab-off', id !== t);
+    });
+    $$('.nav-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+    window.scrollTo({ top: 0 });
+}
 
-        confirmAgeBtn.addEventListener('click', () => {
-            ageModal.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            initAudioContext();
-            renderPlayers();
-            drawWheel();
-        });
+/* =====================================================================
+   HIỂN THỊ
+   ===================================================================== */
+function curLevel() {
+    if (S.level === 'auto') return clamp(1 + Math.floor(S.heat / 25), 1, 4);
+    if (S.level === 'mix') return 1 + rand(4);
+    return +S.level;
+}
+const nm = i => S.players[i] ? S.players[i].name : 'cả bàn';
 
-        function renderPlayers() {
-            playerListDisplay.innerHTML = '';
-            for (let i = 0; i < playerCount; i++) {
-                const isCurrent = i === currentTurnIndex;
-                const badge = document.createElement('div');
-                badge.className = isCurrent
-                    ? "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-500/50 bg-rose-500/20 text-rose-300 font-semibold text-xs shadow-sm transition duration-300"
-                    : "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-transparent text-slate-400 font-medium text-xs transition duration-300";
-                badge.innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5"></i> <span>${playerNames[i]}</span>`;
-                playerListDisplay.appendChild(badge);
-            }
+function renderPlayers() {
+    const box = $('#playerList'); box.innerHTML = '';
+    S.players.forEach((p, i) => {
+        const cur = i === S.turn && !S.over, tg = S.card && S.card.target === i;
+        const d = document.createElement('div');
+        d.className = 'pl-row ' + (cur ? 'pl-cur ' : '') + (tg ? 'pl-target' : '');
+        d.innerHTML = `
+            <div class="avatar" style="background:${COLORS[i]}">${esc((p.name.trim().charAt(0) || '?').toUpperCase())}</div>
+            <div class="min-w-0 flex-1">
+                <input class="name-input" data-name="${i}" maxlength="14" value="${esc(p.name)}" aria-label="Tên người chơi ${i + 1}">
+                <div class="text-[11px] text-slate-400 flex gap-x-2.5"><span title="Joker">🃏 ${p.jokers}</span><span title="Lượt đổi câu">🔄 ${p.rerolls}</span><span title="Chuỗi hoàn thành">🔥 x${p.streak}</span></div>
+            </div>
+            <div class="text-right">
+                <div class="text-lg font-extrabold tabular-nums">${p.score}</div>
+                ${cur ? '<div class="text-[10px] font-bold text-rose-300">đang chơi</div>' : tg ? '<div class="text-[10px] font-bold text-amber-300">đối tượng</div>' : ''}
+            </div>
+            ${S.players.length > 2 ? `<button class="rm-btn" data-rm="${i}" aria-label="Xóa ${esc(p.name)}">✕</button>` : ''}`;
+        box.appendChild(d);
+    });
+    $('#addPlayer').classList.toggle('hidden', S.players.length >= 6);
+    const n = S.players.length;
+    $('#drawTeam').textContent = n >= 3 ? '🎉 Cả nhóm' : '💋 Thách đôi';
+}
 
-            playerInputsGrid.innerHTML = '';
-            for (let i = 0; i < playerCount; i++) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = playerNames[i];
-                input.id = `inputP${i}`;
-                input.placeholder = `Tên người ${i+1}`;
-                input.className = 'bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-rose-500';
-                playerInputsGrid.appendChild(input);
-            }
+function renderTurn() {
+    $('#turnName').textContent = nm(S.turn);
+    $('#roundInfo').textContent = S.maxRounds ? `Vòng ${Math.min(S.round, S.maxRounds)} / ${S.maxRounds}` : `Vòng ${S.round}`;
+    $('#heatBar').style.width = S.heat + '%';
+    $('#heatText').textContent = S.heat + '%';
+    const lv = S.level === 'mix' ? { e: '🎲', n: 'Ngẫu nhiên' } : LV[S.level === 'auto' ? curLevel() : +S.level];
+    $('#lvlNow').textContent = `${lv.e} ${lv.n}${S.level === 'auto' ? ' (tự leo thang)' : ''}`;
+    $('#dblBadge').classList.toggle('hidden', !S.double);
+}
 
-            cardTurnName.textContent = playerNames[currentTurnIndex];
-            lucide.createIcons();
-            drawWheel();
+function renderLevels() {
+    const box = $('#levels');
+    const items = [
+        ['1', '✨', 'Cấp 1', 'Khởi động'], ['2', '🔥', 'Cấp 2', 'Tăng nhiệt'], ['3', '🌶️', 'Cấp 3', 'Nóng bỏng'],
+        ['4', '☄️', 'Cấp 4', 'Cực hạn'], ['mix', '🎲', 'Trộn', 'Ngẫu nhiên'], ['auto', '📈', 'Leo thang', 'Theo nhiệt độ'],
+    ];
+    box.innerHTML = items.map(([v, e, a, b]) =>
+        `<button class="lvl-btn btn ${S.level === v ? 'on' : ''}" data-lv="${v}"><span class="text-lg">${e}</span>${a}<small>${b}</small></button>`).join('');
+}
+
+function renderLimits() {
+    $('#limits').innerHTML = Object.entries(TAGS).map(([k, label]) =>
+        `<div class="sw-row"><span>${label}</span><button class="sw" data-lim="${k}" role="switch" aria-pressed="${!!S.allowed[k]}" aria-label="${label}"></button></div>`).join('');
+}
+
+function renderHistory() {
+    const html = S.history.length ? S.history.map(h => {
+        const badge = { done: ['✅ Hoàn thành', 'text-emerald-300'], safe: ['🛑 Bỏ qua an toàn', 'text-slate-300'], joker: ['🃏 Dùng Joker', 'text-amber-300'], pen: ['⛓️ Chịu phạt', 'text-rose-300'] }[h.res];
+        return `<div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between gap-2 font-bold text-[11px]">
+                <span class="text-rose-300 truncate">Vòng ${h.r} · ${esc(h.p)}${h.t ? ' → ' + esc(h.t) : ''}</span>
+                <span class="${badge[1]} flex-none">${badge[0]}${h.pts ? ` (${h.pts > 0 ? '+' : ''}${h.pts})` : ''}</span>
+            </div>
+            <div class="text-[10px] text-slate-500">${KIND[h.kind] ? KIND[h.kind].n : ''}</div>
+            <p class="text-slate-300 font-serif text-[13px] leading-snug">${esc(h.text)}</p>
+            ${h.extra ? `<p class="text-rose-200/80 italic text-[12px]">Phạt: ${esc(h.extra)}</p>` : ''}
+        </div>`;
+    }).join('') : '<p class="text-slate-500 text-center py-6">Chưa có lượt nào. Quay vòng quay để bắt đầu.</p>';
+    $('#hist1').innerHTML = html; $('#hist2').innerHTML = html;
+}
+
+function refreshBtns() {
+    const free = S.phase === 'idle' && !S.over && !S.paused && !S.spinning;
+    ['#spinBtn', '#drawTruth', '#drawDare', '#drawTeam'].forEach(s => $(s).disabled = !free);
+}
+
+function renderAll() { renderPlayers(); renderTurn(); refreshBtns(); }
+
+/* =====================================================================
+   VÒNG QUAY
+   ===================================================================== */
+let rot = 0;
+function drawWheel() {
+    const c = $('#wheel'), x = c.getContext('2d'), W = c.width, cx = W / 2, R = W / 2 - 10, n = SEG.length, sg = 2 * Math.PI / n;
+    x.clearRect(0, 0, W, W);
+    SEG.forEach((s, i) => {
+        const a0 = i * sg, a1 = a0 + sg;
+        x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath();
+        const g = x.createRadialGradient(cx, cx, R * .12, cx, cx, R);
+        g.addColorStop(0, s.c2); g.addColorStop(1, s.c1);
+        x.fillStyle = g; x.fill();
+        x.strokeStyle = 'rgba(255,255,255,.28)'; x.lineWidth = 3; x.stroke();
+        x.save(); x.translate(cx, cx); x.rotate(a0 + sg / 2);
+        x.fillStyle = '#fff'; x.textBaseline = 'middle';
+        x.textAlign = 'right'; x.font = '800 30px "Plus Jakarta Sans", sans-serif';
+        x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 6;
+        x.fillText(s.label, R - 26, 0);
+        x.textAlign = 'center'; x.font = '44px sans-serif';
+        x.fillText(s.emo, R * .40, 2);
+        x.restore();
+    });
+    x.beginPath(); x.arc(cx, cx, 54, 0, 7); x.fillStyle = '#12081a'; x.fill();
+    x.lineWidth = 5; x.strokeStyle = '#f43f5e'; x.stroke();
+    x.font = '46px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('🔥', cx, cx + 3);
+}
+function segIndex(r) {
+    const n = SEG.length, sg = 2 * Math.PI / n;
+    let a = (-Math.PI / 2 - r) % (2 * Math.PI); if (a < 0) a += 2 * Math.PI;
+    return Math.floor(a / sg) % n;
+}
+function spinWheel() {
+    if (!canPlay()) return;
+    ac(); S.spinning = true; refreshBtns();
+    const start = rot, total = Math.PI * 2 * (5 + Math.random() * 3) + Math.random() * Math.PI * 2;
+    const dur = 4300, t0 = performance.now(); let last = -1;
+    const el = $('#wheel');
+    (function frame(now) {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 4);
+        rot = start + total * e;
+        el.style.transform = `rotate(${rot}rad)`;
+        const idx = segIndex(rot);
+        if (idx !== last) { last = idx; SFX.tick(); buzz(6); }
+        if (p < 1) requestAnimationFrame(frame);
+        else { S.spinning = false; refreshBtns(); onWheel(SEG[segIndex(rot)]); }
+    })(t0);
+}
+function onWheel(seg) {
+    toast(`${seg.emo} ${seg.label}`, 1600);
+    const n = S.players.length;
+    switch (seg.id) {
+        case 'truth': case 'dare': case 'duo': startDraw(seg.id); break;
+        case 'group': startDraw(n >= 3 ? 'group' : 'duo'); break;
+        case 'wild': startDraw('wild'); break;
+        case 'pen': rollTarget(t => { S.penTarget = t; S.card = null; openPenalty(curLevel()); }); break;
+        case 'x2': S.double = true; renderTurn(); toast('⚡ Điểm x2 cho thẻ này!'); setTimeout(() => startDraw(Math.random() < .65 ? 'dare' : 'truth'), 900); break;
+        case 'swap': {
+            const others = S.players.map((_, i) => i).filter(i => i !== S.turn);
+            S.turn = pick(others); renderAll(); toast(`🔄 ${nm(S.turn)} vào thế chỗ!`);
+            setTimeout(() => startDraw(Math.random() < .6 ? 'dare' : 'truth'), 1000); break;
         }
+    }
+}
 
-        mode2Btn.addEventListener('click', () => {
-            playerCount = 2;
-            currentTurnIndex = 0;
-            mode2Btn.className = "px-3 py-1 rounded-md text-xs font-semibold bg-rose-600 text-white transition";
-            mode4Btn.className = "px-3 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition";
-            renderPlayers();
-            playSound('click');
-        });
+/* =====================================================================
+   RÚT THẺ
+   ===================================================================== */
+const canPlay = () => !S.over && !S.paused && !S.spinning && S.phase === 'idle';
+const okTags = c => !c.g || [...c.g].every(k => S.allowed[k]);
 
-        mode4Btn.addEventListener('click', () => {
-            playerCount = 4;
-            currentTurnIndex = 0;
-            mode4Btn.className = "px-3 py-1 rounded-md text-xs font-semibold bg-rose-600 text-white transition";
-            mode2Btn.className = "px-3 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition";
-            renderPlayers();
-            playSound('click');
-        });
+function getCard(kind, lvl) {
+    if (kind === 'wild') {
+        const pool = WILD.filter(okTags);
+        return pool.length ? pick(pool) : null;
+    }
+    const order = [lvl, ...[1, 2, 3, 4].filter(l => l !== lvl).sort((a, b) => Math.abs(a - lvl) - Math.abs(b - lvl))];
+    for (const l of order) {
+        const base = ((DATA[kind] || {})[l] || []);
+        const cs = S.custom.filter(c => c.kind === kind && +c.lvl === l).map(c => ({ t: c.t, s: 0, g: c.g || '' }));
+        let pool = base.concat(cs).filter(okTags);
+        if (!pool.length) continue;
+        const key = kind + l, used = S.used[key] || (S.used[key] = new Set());
+        let fresh = pool.filter(c => !used.has(c.t));
+        if (!fresh.length) { used.clear(); fresh = pool; }
+        const c = pick(fresh); used.add(c.t);
+        return Object.assign({ lvl: l }, c);
+    }
+    return null;
+}
 
-        toggleEditPlayersBtn.addEventListener('click', () => {
-            playerEditForm.classList.toggle('hidden');
-        });
+function fill(t, p, tg) {
+    return t.replace(/\{p\}/g, nm(p)).replace(/\{t\}/g, tg == null ? 'cả bàn' : nm(tg));
+}
 
-        savePlayersBtn.addEventListener('click', () => {
-            for (let i = 0; i < playerCount; i++) {
-                const val = document.getElementById(`inputP${i}`).value.trim();
-                if (val) playerNames[i] = val;
-            }
-            renderPlayers();
-            playerEditForm.classList.add('hidden');
-            playSound('click');
-        });
-
-        spinRandomPlayerBtn.addEventListener('click', () => {
-            currentTurnIndex = Math.floor(Math.random() * playerCount);
-            renderPlayers();
-            playSound('flip');
-        });
-
-        levelBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                levelBtns.forEach(b => {
-                    b.classList.remove('border-rose-500', 'bg-rose-500/20', 'text-rose-300');
-                    b.classList.add('border-slate-800', 'text-slate-400');
-                });
-                btn.classList.remove('border-slate-800', 'text-slate-400');
-                btn.classList.add('border-rose-500', 'bg-rose-500/20', 'text-rose-300');
-                selectedLevel = btn.dataset.level;
-                playSound('click');
-            });
-        });
-
-        function getWheelSegments() {
-            const segments = [];
-            for (let i = 0; i < playerCount; i++) {
-                segments.push(`${playerNames[i]} - Truth`);
-                segments.push(`${playerNames[i]} - Dare`);
-            }
-            return segments;
+function rollTarget(cb) {
+    const others = S.players.map((_, i) => i).filter(i => i !== S.turn);
+    if (others.length === 1) return cb(others[0]);
+    S.spinning = true; refreshBtns();
+    let i = rand(others.length), step = 0, delay = 70;
+    const total = 12 + rand(6);
+    (function go() {
+        const idx = others[i % others.length];
+        $$('#playerList .pl-row').forEach((r, j) => r.classList.toggle('pl-roll', j === idx));
+        SFX.tick(); i++; step++;
+        if (step < total) { delay += 16; setTimeout(go, delay); }
+        else {
+            S.spinning = false;
+            $$('#playerList .pl-row').forEach(r => r.classList.remove('pl-roll'));
+            cb(idx);
         }
+    })();
+}
 
-        function drawWheel() {
-            const segments = getWheelSegments();
-            const numSegments = segments.length;
-            const arcSize = (2 * Math.PI) / numSegments;
-            const radius = wheelCanvas.width / 2;
+function startDraw(kind) {
+    if (S.over || S.paused) return;
+    if (S.phase !== 'idle') S.phase = 'idle';
+    ac();
+    if (kind === 'group' && S.players.length < 3) kind = 'duo';
+    if (kind === 'group') return makeCard(kind, null);
+    rollTarget(t => makeCard(kind, t));
+}
 
-            wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-            wheelCtx.save();
-            wheelCtx.translate(radius, radius);
-            wheelCtx.rotate(wheelAngle);
+function makeCard(kind, target) {
+    const lvl = curLevel(), c = getCard(kind, lvl);
+    if (!c) {
+        toast('Không còn thẻ phù hợp với giới hạn hiện tại. Hãy nới giới hạn hoặc thêm thẻ tự tạo.', 4000);
+        S.phase = 'idle'; refreshBtns(); return;
+    }
+    S.card = {
+        kind, lvl: kind === 'wild' ? 0 : c.lvl, target, e: c.e || '',
+        text: fill(c.t, S.turn, target), sec: c.s || 0, tags: c.g || '',
+        mult: S.double ? 2 : 1,
+    };
+    S.double = false;
+    S.phase = 'card';
+    SFX.flip(); buzz(40);
+    renderAll(); renderCard();
+    if (window.innerWidth < 1024) $('#cardBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
-            const colors = ['#e11d48', '#3b0764', '#9f1239', '#1e1b4b', '#f43f5e', '#4c0519'];
+function basePts(c, p) {
+    const b = { truth: 10, dare: 20, duo: 30, group: 30, wild: 15 }[c.kind] * (c.kind === 'wild' ? 1 : c.lvl);
+    return Math.round(b * ((p.streak + 1) >= 3 ? 1.5 : 1) * c.mult);
+}
 
-            for (let i = 0; i < numSegments; i++) {
-                const angle = i * arcSize;
-                wheelCtx.beginPath();
-                wheelCtx.fillStyle = colors[i % colors.length];
-                wheelCtx.moveTo(0, 0);
-                wheelCtx.arc(0, 0, radius - 4, angle, angle + arcSize);
-                wheelCtx.fill();
-                wheelCtx.lineWidth = 1.5;
-                wheelCtx.strokeStyle = '#f43f5e';
-                wheelCtx.stroke();
+function renderCard() {
+    const idle = $('#cardIdle'), live = $('#cardLive');
+    if (!S.card) { idle.classList.remove('hidden'); live.classList.add('hidden'); live.classList.remove('flex'); return; }
+    const c = S.card, p = S.players[S.turn], k = KIND[c.kind];
+    idle.classList.add('hidden'); live.classList.remove('hidden'); live.classList.add('flex');
+    live.classList.remove('flip-in'); void live.offsetWidth; live.classList.add('flip-in');
 
-                wheelCtx.save();
-                wheelCtx.rotate(angle + arcSize / 2);
-                wheelCtx.textAlign = 'right';
-                wheelCtx.fillStyle = '#ffffff';
-                wheelCtx.font = 'bold 10px Plus Jakarta Sans, sans-serif';
-                wheelCtx.fillText(segments[i], radius - 15, 4);
-                wheelCtx.restore();
-            }
+    const kEl = $('#cKind'); kEl.textContent = k.n; kEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full border ' + k.c;
+    $('#cLvl').textContent = c.lvl ? `${'🔥'.repeat(c.lvl)} ${LV[c.lvl].n}` : 'Đặc biệt';
+    const who = $('#cWho');
+    who.innerHTML = c.kind === 'group'
+        ? `<span class="text-orange-300">Cả bàn cùng tham gia, ${esc(p.name)} dẫn đầu</span>`
+        : `<span style="color:${COLORS[S.turn]}">${esc(p.name)}</span>${c.target != null ? `<span class="text-slate-500">→</span><span style="color:${COLORS[c.target]}">${esc(nm(c.target))}</span>` : ''}`;
+    $('#cText').textContent = c.text;
+    $('#cTags').innerHTML = [...c.tags].map(t => `<span class="tag-chip">${TAGS[t]}</span>`).join('');
+    $('#cPts').textContent = c.kind === 'wild' ? '' : `Thưởng: +${basePts(c, p)} điểm${c.mult > 1 ? ' (x2)' : ''}${p.streak >= 2 ? ' · chuỗi x1.5' : ''}`;
+    $('#bDone').textContent = c.kind === 'wild' ? '✓ Áp dụng lá bùa' : '✓ Xong lượt';
+    $('#bReroll').textContent = `🔄 Đổi câu (${p.rerolls})`; $('#bReroll').disabled = p.rerolls <= 0;
+    $('#bJoker').textContent = `🃏 Joker (${p.jokers})`; $('#bJoker').disabled = p.jokers <= 0;
+    $('#bPen').classList.toggle('hidden', c.kind === 'wild');
+    setupTimer(c.sec);
+}
 
-            wheelCtx.beginPath();
-            wheelCtx.arc(0, 0, 22, 0, 2 * Math.PI);
-            wheelCtx.fillStyle = '#0f172a';
-            wheelCtx.fill();
-            wheelCtx.strokeStyle = '#f43f5e';
-            wheelCtx.lineWidth = 3;
-            wheelCtx.stroke();
+/* =====================================================================
+   HẸN GIỜ
+   ===================================================================== */
+let tm = null, tEnd = 0, tLeft = 0, tTotal = 0, tRun = false;
+const fmt = ms => { const s = Math.ceil(ms / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+function setupTimer(sec) {
+    clearTimer();
+    const box = $('#timerBox');
+    if (!sec) { box.classList.add('hidden'); return; }
+    box.classList.remove('hidden'); tTotal = tLeft = sec * 1000; updTimer();
+    $('#timerBtn').textContent = '▶ Bắt đầu';
+}
+function updTimer() {
+    $('#timerText').textContent = fmt(tLeft);
+    $('#timerBar').style.width = (tTotal ? tLeft / tTotal * 100 : 0) + '%';
+}
+function clearTimer() { clearInterval(tm); tRun = false; tLeft = 0; }
+function startTimer() {
+    if (tRun || tLeft <= 0) return;
+    tRun = true; tEnd = performance.now() + tLeft; $('#timerBtn').textContent = '⏸ Tạm dừng';
+    tm = setInterval(() => {
+        tLeft = Math.max(0, tEnd - performance.now()); updTimer();
+        if (tLeft <= 0) { clearInterval(tm); tRun = false; SFX.alarm(); buzz([200, 100, 200, 100, 400]); toast('⏰ Hết giờ!'); $('#timerBtn').textContent = '▶ Bắt đầu'; }
+    }, 200);
+}
+function pauseTimer() {
+    if (!tRun) return;
+    tRun = false; clearInterval(tm); tLeft = Math.max(0, tEnd - performance.now()); $('#timerBtn').textContent = '▶ Tiếp tục';
+}
 
-            wheelCtx.restore();
+/* =====================================================================
+   HOÀN THÀNH / BỎ QUA / PHẠT
+   ===================================================================== */
+function log(res, pts, extra) {
+    const c = S.card, p = S.players[S.turn];
+    S.history.unshift({
+        r: S.round, p: p.name, t: c && c.target != null ? nm(c.target) : '', kind: c ? c.kind : 'dare',
+        text: c ? c.text : (extra || ''), res, pts: pts || 0, extra: c ? extra : ''
+    });
+    if (S.history.length > 100) S.history.pop();
+    renderHistory();
+}
+
+function complete() {
+    if (S.phase !== 'card') return;
+    clearTimer();
+    const c = S.card, p = S.players[S.turn];
+    let ov = null;
+    if (c.kind === 'wild') {
+        switch (c.e) {
+            case 'swap': ov = c.target; break;
+            case 'double': S.double = true; break;
+            case 'reverse': S.dir *= -1; break;
+            case 'joker': p.jokers++; break;
+            case 'cool': S.heat = clamp(S.heat - 15); break;
+            case 'heat': S.heat = clamp(S.heat + 15); break;
         }
+    }
+    const pts = basePts(c, p);
+    p.score += pts; p.streak++; p.best = Math.max(p.best, p.streak);
+    if (c.kind === 'truth') { p.truths++; S.heat = clamp(S.heat + 5); }
+    else if (c.kind === 'dare') { p.dares++; S.heat = clamp(S.heat + 8); }
+    else if (c.kind === 'duo' || c.kind === 'group') {
+        p.dares++; S.heat = clamp(S.heat + 12);
+        const others = c.kind === 'duo' ? [c.target] : S.players.map((_, i) => i).filter(i => i !== S.turn);
+        others.forEach(i => { S.players[i].score += 5 * c.lvl; });
+    }
+    if (p.streak > 0 && p.streak % 5 === 0) { p.jokers++; toast('🃏 Chuỗi 5 liên tiếp! Bạn nhận thêm 1 Joker'); }
+    log('done', pts);
+    SFX.win(); buzz([60, 40, 60]);
+    finishTurn(ov);
+}
 
-        spinWheelBtn.addEventListener('click', () => {
-            if (isWheelSpinning) return;
-            isWheelSpinning = true;
+function finishTurn(ov) {
+    S.card = null; S.phase = 'idle'; S.penTarget = null;
+    renderCard(); nextTurn(ov); save();
+}
 
-            const extraSpins = 5 + Math.random() * 5;
-            const totalRotation = extraSpins * 2 * Math.PI + Math.random() * 2 * Math.PI;
-            const duration = 3500;
-            const startAngle = wheelAngle;
-            const startTime = performance.now();
+function nextTurn(ov) {
+    const n = S.players.length;
+    let ni;
+    if (ov != null) ni = ov;
+    else {
+        ni = (S.turn + S.dir + n) % n;
+        if ((S.dir > 0 && ni < S.turn) || (S.dir < 0 && ni > S.turn)) S.round++;
+    }
+    S.turn = ni;
+    if (S.maxRounds && S.round > S.maxRounds) return endGame();
+    renderAll();
+}
 
-            function animateWheel(now) {
-                const elapsed = now - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
+function skipSafe() {
+    if (S.phase !== 'card') return;
+    clearTimer(); log('safe', 0); SFX.click(); toast('Không sao cả. Tới lượt tiếp theo nhé.');
+    finishTurn();
+}
+function useJoker() {
+    if (S.phase !== 'card') return;
+    const p = S.players[S.turn]; if (p.jokers <= 0) return;
+    clearTimer(); p.jokers--; log('joker', 0); SFX.win(); toast('🃏 Đã dùng Joker, không mất điểm.');
+    finishTurn();
+}
+function reroll() {
+    if (S.phase !== 'card') return;
+    const p = S.players[S.turn]; if (p.rerolls <= 0) return;
+    p.rerolls--; clearTimer();
+    const { kind, target } = S.card, keepDouble = S.card.mult > 1;
+    S.double = keepDouble;
+    makeCard(kind, target);
+}
+function takePenalty() {
+    if (S.phase !== 'card') return;
+    clearTimer();
+    S.penTarget = S.card.target != null ? S.card.target : pick(S.players.map((_, i) => i).filter(i => i !== S.turn));
+    openPenalty(S.card.lvl || curLevel());
+}
 
-                wheelAngle = startAngle + totalRotation * easeOut;
-                drawWheel();
+function openPenalty(lvl) {
+    S.phase = 'pen'; S.penReroll = 1; S.penTier = clamp(lvl, 1, 3);
+    if (S.penTarget == null) S.penTarget = pick(S.players.map((_, i) => i).filter(i => i !== S.turn));
+    drawPenalty(); openModal('penModal'); SFX.pen(); buzz(120); refreshBtns();
+}
+function drawPenalty() {
+    let pool = PEN[S.penTier].filter(okTags);
+    if (!pool.length) pool = PEN[1].filter(okTags);
+    if (!pool.length) pool = [D("Khen {t} một câu thật ngọt.")];
+    let c = pick(pool), tries = 0;
+    while (c.t === S.penRaw && pool.length > 1 && tries++ < 8) c = pick(pool);
+    S.penRaw = c.t;
+    S.penText = fill(c.t, S.turn, S.penTarget);
+    $('#penText').textContent = S.penText;
+    const b = $('#penBadge');
+    b.textContent = S.penReroll > 0 ? '⚡ Được đổi 1 lần' : '❌ Hết lượt đổi hình phạt';
+    $('#penAgain').disabled = S.penReroll <= 0;
+}
+function acceptPenalty() {
+    const p = S.players[S.turn];
+    p.skips++; p.pens++; p.streak = 0; p.score = Math.max(0, p.score - 10);
+    S.heat = clamp(S.heat + 6);
+    log('pen', -10, S.penText);
+    closeModal('penModal'); finishTurn();
+}
+function skipPenaltySafe() {
+    closeModal('penModal'); log('safe', 0); toast('Đã bỏ qua hình phạt.'); finishTurn();
+}
 
-                if (Math.random() < 0.2) playSound('click');
+/* =====================================================================
+   DỪNG KHẨN CẤP & KẾT THÚC
+   ===================================================================== */
+let wasRunning = false;
+function safeStop() {
+    if (S.paused) return;
+    S.paused = true; wasRunning = tRun; pauseTimer(); refreshBtns();
+    openModal('safeOverlay'); SFX.click(); buzz(30);
+}
+function safeResume() {
+    S.paused = false; closeModal('safeOverlay'); refreshBtns();
+    if (wasRunning) startTimer();
+}
 
-                if (progress < 1) {
-                    requestAnimationFrame(animateWheel);
-                } else {
-                    isWheelSpinning = false;
-                    const segments = getWheelSegments();
-                    const numSegments = segments.length;
-                    const arcSize = (2 * Math.PI) / numSegments;
-                    
-                    const normalizedAngle = (1.5 * Math.PI - (wheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-                    const selectedIndex = Math.floor(normalizedAngle / arcSize) % numSegments;
-                    
-                    const resultText = segments[selectedIndex];
-                    const [pName, actionType] = resultText.split(' - ');
-                    
-                    const pIndex = playerNames.indexOf(pName);
-                    if (pIndex !== -1) currentTurnIndex = pIndex;
-                    renderPlayers();
+function endGame() {
+    S.over = true; S.card = null; S.phase = 'idle'; renderCard(); renderAll();
+    const rank = [...S.players.map((p, i) => ({ p, i }))].sort((a, b) => b.p.score - a.p.score);
+    const most = (key) => { const m = Math.max(...S.players.map(p => p[key])); return m > 0 ? S.players.filter(p => p[key] === m).map(p => p.name) : []; };
+    const titles = {};
+    const add = (names, t) => names.forEach(n => (titles[n] = titles[n] || []).push(t));
+    add([rank[0].p.name], '👑 Vua đêm nay');
+    add(most('dares'), '🔥 Chúa tể thử thách');
+    add(most('truths'), '💬 Thánh thật thà');
+    add(most('skips'), '🏃 Cao thủ né tránh');
+    add(most('best'), '⚡ Chuỗi dài nhất');
+    $('#endList').innerHTML = rank.map(({ p, i }, r) => `
+        <div class="pl-row">
+            <div class="text-lg w-6 text-center">${['🥇', '🥈', '🥉'][r] || (r + 1)}</div>
+            <div class="avatar" style="background:${COLORS[i]}">${esc(p.name.charAt(0).toUpperCase())}</div>
+            <div class="min-w-0 flex-1">
+                <div class="font-bold truncate">${esc(p.name)}</div>
+                <div class="text-[11px] text-slate-400">${p.truths} thật · ${p.dares} thách · ${p.skips} bỏ qua</div>
+                <div class="text-[11px] text-amber-300">${(titles[p.name] || []).join(' · ')}</div>
+            </div>
+            <div class="text-xl font-extrabold tabular-nums">${p.score}</div>
+        </div>`).join('');
+    openModal('endModal'); SFX.win();
+}
 
-                    // Automatically draw card & transition smooth scroll to content
-                    drawCard(actionType.toLowerCase() === 'truth' ? 'truth' : 'dare');
-                    
-                    setTimeout(() => {
-                        cardSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 100);
-                }
-            }
+function newGame() {
+    S.players = S.players.map(p => mkPlayer(p.name));
+    Object.assign(S, { turn: 0, dir: 1, round: 1, heat: 0, double: false, used: {}, history: [], card: null, phase: 'idle', paused: false, over: false, spinning: false });
+    clearTimer(); renderCard(); renderAll(); renderHistory();
+    ['endModal', 'penModal', 'safeOverlay'].forEach(closeModal);
+}
 
-            requestAnimationFrame(animateWheel);
+/* =====================================================================
+   THẺ TỰ TẠO
+   ===================================================================== */
+function renderCustom() {
+    const KN = { truth: 'Thật', dare: 'Thách', duo: 'Đôi', group: 'Nhóm' };
+    $('#cuList').innerHTML = S.custom.length ? S.custom.map((c, i) => `
+        <div class="flex items-start gap-2 bg-slate-900/80 border border-slate-800 rounded-xl p-2.5">
+            <div class="flex-1 min-w-0"><div class="text-[10px] text-rose-300 font-bold">${KN[c.kind]} · Cấp ${c.lvl}</div><div class="text-slate-300">${esc(c.t)}</div></div>
+            <button data-cdel="${i}" class="text-slate-500 hover:text-rose-300" aria-label="Xóa thẻ">✕</button>
+        </div>`).join('') : '<p class="text-slate-500 text-center">Chưa có thẻ tự tạo nào.</p>';
+}
+
+/* =====================================================================
+   SỰ KIỆN
+   ===================================================================== */
+function bind() {
+    $('#ageCheck').addEventListener('change', e => $('#ageOk').disabled = !e.target.checked);
+    $('#ageOk').addEventListener('click', () => { ac(); closeModal('ageModal'); $('#app').classList.remove('hidden'); SFX.win(); });
+
+    $('#spinBtn').addEventListener('click', spinWheel);
+    $('#drawTruth').addEventListener('click', () => canPlay() && startDraw('truth'));
+    $('#drawDare').addEventListener('click', () => canPlay() && startDraw('dare'));
+    $('#drawTeam').addEventListener('click', () => canPlay() && startDraw(S.players.length >= 3 ? 'group' : 'duo'));
+
+    $('#bDone').addEventListener('click', complete);
+    $('#bReroll').addEventListener('click', reroll);
+    $('#bJoker').addEventListener('click', useJoker);
+    $('#bPen').addEventListener('click', takePenalty);
+    $('#bSafe').addEventListener('click', skipSafe);
+    $('#timerBtn').addEventListener('click', () => tRun ? pauseTimer() : startTimer());
+
+    $('#penAgain').addEventListener('click', () => { if (S.penReroll > 0) { S.penReroll--; drawPenalty(); SFX.pen(); } });
+    $('#penOk').addEventListener('click', acceptPenalty);
+    $('#penSafe').addEventListener('click', skipPenaltySafe);
+
+    $('#btnSafe').addEventListener('click', safeStop);
+    $('#safeResume').addEventListener('click', safeResume);
+    $('#safeEnd').addEventListener('click', () => { safeResume(); endGame(); });
+
+    $('#btnHistory').addEventListener('click', () => { renderHistory(); openModal('histModal'); });
+    $('#clearLog').addEventListener('click', () => { S.history = []; renderHistory(); });
+    $('#btnCustom').addEventListener('click', () => { renderCustom(); openModal('customModal'); });
+    $('#btnSound').addEventListener('click', () => {
+        S.sound = !S.sound; save(); paintSound(); if (S.sound) SFX.click();
+    });
+    $('#newGame').addEventListener('click', () => { newGame(); toast('Đã bắt đầu ván mới'); });
+    $('#endAgain').addEventListener('click', newGame);
+    $('#rounds').addEventListener('change', e => { S.maxRounds = +e.target.value; save(); renderTurn(); });
+
+    $$('[data-close]').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
+    $$('.modal').forEach(m => m.addEventListener('click', e => {
+        if (e.target === m && !['ageModal', 'safeOverlay', 'penModal'].includes(m.id)) closeModal(m.id);
+    }));
+
+    $$('.nav-btn').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+
+    $('#levels').addEventListener('click', e => {
+        const b = e.target.closest('[data-lv]'); if (!b) return;
+        S.level = b.dataset.lv; save(); renderLevels(); renderTurn(); SFX.click();
+        if (S.level === '4') toast('☄️ Cấp Cực Hạn: hãy chắc chắn cả hai đều sẵn sàng. Ai cũng có thể bỏ qua.', 3800);
+        if (S.level === 'auto') toast('📈 Cấp độ sẽ tăng dần theo nhiệt độ');
+    });
+    $('#limits').addEventListener('click', e => {
+        const b = e.target.closest('[data-lim]'); if (!b) return;
+        const k = b.dataset.lim; S.allowed[k] = S.allowed[k] ? 0 : 1; save(); renderLimits(); SFX.click();
+    });
+
+    const pl = $('#playerList');
+    pl.addEventListener('change', e => {
+        const i = e.target.dataset && e.target.dataset.name; if (i == null) return;
+        S.players[i].name = e.target.value.trim().slice(0, 14) || ('Người ' + (+i + 1));
+        save(); renderAll(); if (S.card) renderCard();
+    });
+    pl.addEventListener('click', e => {
+        const b = e.target.closest('[data-rm]'); if (!b) return;
+        if (S.players.length <= 2) return;
+        const i = +b.dataset.rm;
+        S.players.splice(i, 1);
+        if (S.turn > i) S.turn--; if (S.turn >= S.players.length) S.turn = 0;
+        if (S.card) { S.card = null; S.phase = 'idle'; clearTimer(); renderCard(); }
+        save(); renderAll();
+    });
+    $('#addPlayer').addEventListener('click', () => {
+        if (S.players.length >= 6) return;
+        S.players.push(mkPlayer('Người ' + (S.players.length + 1))); save(); renderAll();
+    });
+
+    $('#cuSave').addEventListener('click', () => {
+        const t = $('#cuText').value.trim(); if (!t) { toast('Hãy nhập nội dung thẻ'); return; }
+        S.custom.push({ kind: $('#cuKind').value, lvl: +$('#cuLvl').value, g: $('#cuTag').value, t });
+        $('#cuText').value = ''; save(); renderCustom(); toast('Đã thêm thẻ mới'); SFX.click();
+    });
+    $('#cuList').addEventListener('click', e => {
+        const b = e.target.closest('[data-cdel]'); if (!b) return;
+        S.custom.splice(+b.dataset.cdel, 1); save(); renderCustom();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if ($('#app').classList.contains('hidden')) return;
+        const k = e.key.toLowerCase();
+        if (k === 's') { e.preventDefault(); S.paused ? safeResume() : safeStop(); return; }
+        if (k === 'escape') {
+            if (S.paused) return safeResume();
+            $$('.modal:not(.hidden)').forEach(m => { if (!['penModal', 'endModal'].includes(m.id)) closeModal(m.id); });
+            return;
+        }
+        if ($$('.modal:not(.hidden)').length) return;
+        if (k === ' ') { e.preventDefault(); spinWheel(); }
+        else if (k === 't' && canPlay()) startDraw('truth');
+        else if (k === 'd' && canPlay()) startDraw('dare');
+        else if (k === 'enter' && S.phase === 'card') complete();
+        else if (k === 'h') { renderHistory(); openModal('histModal'); }
+        else if (k === 'm') { S.sound = !S.sound; save(); paintSound(); }
+    });
+}
+
+function paintSound() {
+    $('#btnSound').innerHTML = `<i data-lucide="${S.sound ? 'volume-2' : 'volume-x'}" class="w-5 h-5"></i>`; icons();
+}
+
+/* =====================================================================
+   HẠT LỬA NỀN
+   ===================================================================== */
+(function fx() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const c = $('#fx'), x = c.getContext('2d'); let ps = [];
+    const size = () => { c.width = innerWidth; c.height = innerHeight; };
+    addEventListener('resize', size); size();
+    const mk = (init) => ({
+        x: Math.random() * c.width, y: init ? Math.random() * c.height : c.height + 10,
+        r: Math.random() * 2.6 + .8, vy: Math.random() * .7 + .25, vx: (Math.random() - .5) * .4, o: Math.random() * .45 + .15
+    });
+    const N = innerWidth < 700 ? 22 : 42;
+    for (let i = 0; i < N; i++) ps.push(mk(true));
+    (function loop() {
+        x.clearRect(0, 0, c.width, c.height);
+        ps.forEach((p, i) => {
+            p.y -= p.vy; p.x += p.vx; if (p.y < -10) ps[i] = mk(false);
+            x.fillStyle = `rgba(244,63,94,${p.o})`; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill();
         });
+        requestAnimationFrame(loop);
+    })();
+})();
 
-        function drawCard(type) {
-            currentCardType = type;
-            clearInterval(timerInterval);
-            timerContainer.classList.add('hidden');
-
-            let pool = [];
-            let activeLevelText = "";
-
-            if (selectedLevel === 'all') {
-                pool = [
-                    ...gameData[1][type],
-                    ...gameData[2][type],
-                    ...gameData[3][type]
-                ];
-                activeLevelText = "Trộn Tất Cả (Mix All)";
-            } else {
-                pool = gameData[selectedLevel][type];
-                activeLevelText = selectedLevel === '1' ? 'Cấp 1: Khởi Động' : selectedLevel === '2' ? 'Cấp 2: Tăng Nhiệt 18+' : 'Cấp 3: Siêu Dăm 21+';
-            }
-
-            const randomIndex = Math.floor(Math.random() * pool.length);
-            const promptText = pool[randomIndex];
-
-            if (type === 'truth') {
-                cardCategory.textContent = "SỰ THẬT";
-                cardCategory.className = "text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30";
-            } else {
-                cardCategory.textContent = "THỬ THÁCH";
-                cardCategory.className = "text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30";
-                startTimer(45);
-            }
-
-            cardLevelBadge.textContent = activeLevelText;
-            cardPrompt.textContent = promptText;
-
-            historyLog.unshift({
-                player: playerNames[currentTurnIndex],
-                type: type === 'truth' ? 'Sự Thật' : 'Thử Thách',
-                prompt: promptText
-            });
-
-            cardInner.classList.add('rotate-y-180');
-            isFlipped = true;
-            playSound('flip');
-        }
-
-        drawTruthBtn.addEventListener('click', () => drawCard('truth'));
-        drawDareBtn.addEventListener('click', () => drawCard('dare'));
-        rerollBtn.addEventListener('click', () => {
-            if (currentCardType) drawCard(currentCardType);
-        });
-
-        completeTurnBtn.addEventListener('click', () => {
-            resetCardAndNextTurn();
-        });
-
-        function resetCardAndNextTurn() {
-            cardInner.classList.remove('rotate-y-180');
-            isFlipped = false;
-            currentTurnIndex = (currentTurnIndex + 1) % playerCount;
-            renderPlayers();
-            clearInterval(timerInterval);
-            playSound('click');
-        }
-
-        function startTimer(seconds) {
-            timerContainer.classList.remove('hidden');
-            let timeLeft = seconds;
-            timerCountdown.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
-            timerProgress.style.width = '100%';
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerCountdown.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
-                const pct = (timeLeft / seconds) * 100;
-                timerProgress.style.width = `${pct}%`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    playSound('chime');
-                }
-            }, 1000);
-        }
-
-        function generatePenalty() {
-            const randomPenalty = penalties[Math.floor(Math.random() * penalties.length)];
-            penaltyText.textContent = `"${randomPenalty}"`;
-        }
-
-        skipPenaltyBtn.addEventListener('click', () => {
-            // Reset penalty reroll counter when entering penalty modal
-            hasRerolledPenalty = false;
-            spinPenaltyAgainBtn.disabled = false;
-            spinPenaltyAgainBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-            penaltyRerollBadge.textContent = "⚡ Bạn có 1 lần đổi hình phạt";
-            penaltyRerollBadge.className = "text-[11px] text-amber-400 bg-amber-950/40 border border-amber-800/50 py-1 px-3 rounded-full inline-block font-medium";
-
-            generatePenalty();
-            penaltyModal.classList.remove('hidden');
-            playSound('penalty');
-        });
-
-        spinPenaltyAgainBtn.addEventListener('click', () => {
-            if (hasRerolledPenalty) return;
-
-            // Execute single reroll permitted
-            hasRerolledPenalty = true;
-            generatePenalty();
-            playSound('click');
-
-            // Disable button and update indicator status
-            spinPenaltyAgainBtn.disabled = true;
-            spinPenaltyAgainBtn.classList.add('opacity-40', 'cursor-not-allowed');
-            penaltyRerollBadge.textContent = "❌ Đã hết lượt đổi hình phạt";
-            penaltyRerollBadge.className = "text-[11px] text-rose-400 bg-rose-950/40 border border-rose-800/50 py-1 px-3 rounded-full inline-block font-medium";
-        });
-
-        closePenaltyBtn.addEventListener('click', () => {
-            penaltyModal.classList.add('hidden');
-            resetCardAndNextTurn();
-        });
-
-        openCustomModalBtn.addEventListener('click', () => customModal.classList.remove('hidden'));
-        closeCustomModalBtn.addEventListener('click', () => customModal.classList.add('hidden'));
-
-        saveCustomBtn.addEventListener('click', () => {
-            const type = document.getElementById('customType').value;
-            const level = document.getElementById('customLevel').value;
-            const content = document.getElementById('customContent').value.trim();
-
-            if (content) {
-                gameData[level][type].push(content);
-                document.getElementById('customContent').value = '';
-                customModal.classList.add('hidden');
-                playSound('click');
-            }
-        });
-
-        historyToggleBtn.addEventListener('click', () => {
-            renderHistoryLog();
-            historyModal.classList.remove('hidden');
-        });
-
-        closeHistoryModalBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
-
-        clearHistoryBtn.addEventListener('click', () => {
-            historyLog = [];
-            renderHistoryLog();
-            playSound('click');
-        });
-
-        function renderHistoryLog() {
-            historyListContainer.innerHTML = '';
-            if (historyLog.length === 0) {
-                historyListContainer.innerHTML = '<p class="text-slate-500 text-center py-4">Chưa có bài nào được rút trong phiên này.</p>';
-                return;
-            }
-
-            historyLog.forEach(item => {
-                const el = document.createElement('div');
-                el.className = "bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 space-y-1";
-                el.innerHTML = `
-                    <div class="flex items-center justify-between font-bold text-[10px]">
-                        <span class="text-rose-400">${item.player}</span>
-                        <span class="${item.type === 'Sự Thật' ? 'text-purple-400' : 'text-pink-400'} uppercase">${item.type}</span>
-                    </div>
-                    <p class="text-slate-300 font-serif">${item.prompt}</p>
-                `;
-                historyListContainer.appendChild(el);
-            });
-        }
-
-        let audioCtx = null;
-
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playSound(type) {
-            if (!soundEnabled || !audioCtx) return;
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            const now = audioCtx.currentTime;
-
-            if (type === 'click') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, now);
-                osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.08);
-                osc.start(now);
-                osc.stop(now + 0.08);
-            } else if (type === 'flip') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(250, now);
-                osc.frequency.exponentialRampToValueAtTime(500, now + 0.15);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.15);
-                osc.start(now);
-                osc.stop(now + 0.15);
-            } else if (type === 'penalty') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.linearRampToValueAtTime(110, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.25);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            } else if (type === 'chime') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.1);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            }
-        }
-
-        soundToggle.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundToggle.innerHTML = soundEnabled 
-                ? '<i data-lucide="volume-2" class="w-5 h-5"></i>' 
-                : '<i data-lucide="volume-x" class="w-5 h-5"></i>';
-            lucide.createIcons();
-        });
-
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + Math.random() * 20;
-                this.size = Math.random() * 3.5 + 1;
-                this.speedY = Math.random() * 0.8 + 0.3;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.opacity = Math.random() * 0.5 + 0.2;
-            }
-            update() {
-                this.y -= this.speedY;
-                this.x += this.speedX;
-                if (this.y < -10) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = `rgba(244, 63, 94, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 40; i++) {
-            particles.push(new Particle());
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-    </script>
+/* =====================================================================
+   KHỞI ĐỘNG
+   ===================================================================== */
+load();
+bind();
+renderLevels(); renderLimits(); renderHistory(); renderCard(); renderAll();
+$('#rounds').value = String(S.maxRounds);
+setTab('play');
+drawWheel();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawWheel);
+paintSound(); icons();
+</script>
 </body>
 </html>
