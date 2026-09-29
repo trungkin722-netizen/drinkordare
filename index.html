@@ -104,7 +104,7 @@
         <div class="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-rose-500/40 text-3xl">🔥</div>
         <h2 class="text-2xl font-serif font-bold text-white mb-2">Inferno Edition · 21+</h2>
         <p class="text-slate-300 text-sm mb-4 leading-relaxed">
-            Bản này <strong class="text-rose-400">nóng hơn, nhiều thử thách hơn</strong>: 4 cấp độ, vòng quay số phận, điểm thưởng, thanh nhiệt độ và hình phạt. Chỉ dành cho người lớn chơi riêng tư.
+            Bản này <strong class="text-rose-400">nóng hơn, nhiều thử thách hơn</strong>: 5 cấp độ, vòng quay số phận, điểm thưởng, thanh nhiệt độ và hình phạt. Chỉ dành cho người lớn chơi riêng tư.
         </p>
         <label class="flex items-start gap-3 text-left text-[13px] text-slate-300 bg-slate-950/60 border border-slate-800 rounded-xl p-3 mb-4 cursor-pointer">
             <input id="ageCheck" type="checkbox" class="mt-1 w-4 h-4 accent-rose-500 flex-none">
@@ -195,7 +195,7 @@
             </div>
         </div>
 
-        <div id="levels" class="grid grid-cols-3 sm:grid-cols-6 gap-2"></div>
+        <div id="levels" class="grid grid-cols-4 sm:grid-cols-7 gap-2"></div>
 
         <div class="grid gap-4 min-[1400px]:grid-cols-2 items-start">
             <!-- Vòng quay -->
@@ -317,7 +317,7 @@
                 <option value="duo">Thách đôi</option><option value="group">Cả nhóm</option>
             </select>
             <select id="cuLvl" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
-                <option value="1">Cấp 1</option><option value="2">Cấp 2</option><option value="3">Cấp 3</option><option value="4">Cấp 4</option>
+                <option value="1">Cấp 1</option><option value="2">Cấp 2</option><option value="3">Cấp 3</option><option value="4">Cấp 4</option><option value="5">Cấp 5</option>
             </select>
         </div>
         <select id="cuTag" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
@@ -446,6 +446,18 @@ const DATA = {
       T("Bạn muốn nghe {t} nói câu nào bên tai mình nhất?"),
       T("Lời khen nóng bỏng nhất bạn chưa từng dám nói với {t} là gì? Nói luôn bây giờ."),
     ],
+    5: [
+      T("Bạn muốn {t} làm gì với bạn đầu tiên khi cánh cửa phòng khép lại?"),
+      T("Điều gì bạn khao khát nhất ở {t} mà chưa bao giờ dám nói thành lời?"),
+      T("Kể một tưởng tượng nóng nhất của bạn về {t}. Không được bỏ qua chi tiết nào bạn dám kể."),
+      T("Bạn thích {t} nắm quyền hay bạn nắm quyền? Nếu được đổi vai trong một đêm thì sao?", "r"),
+      T("Món đồ nào của {t} (áo sơ mi, đồ ngủ, mùi nước hoa...) khiến bạn phát điên?"),
+      T("Nếu chỉ còn 30 phút riêng tư với {t}, bạn sẽ dùng thế nào?"),
+      T("Bạn muốn {t} thì thầm câu nào để bạn mất kiểm soát hoàn toàn?"),
+      T("Có điều gì bạn muốn {t} làm chậm hơn, dài hơn, hay dữ dội hơn?"),
+      T("Bạn đã bao giờ ước bị {t} trêu chọc đến mức phải xin? Kể cảm giác đó."),
+      T("Chọn một từ để mô tả {t} khi ở trạng thái khiến bạn thèm nhất, rồi giải thích."),
+    ],
   },
   dare: {
     1: [
@@ -512,6 +524,18 @@ const DATA = {
       D("Uống một ngụm nước hoặc rượu rồi chuyển sang miệng {t} bằng một nụ hôn.", 0, "dpk"),
       D("Trao {t} tấm phiếu một đêm: họ viết ra một mong muốn (trong giới hạn) và bạn thực hiện trong hôm nay.", 0, "r"),
     ],
+    5: [
+      D("Để {t} bịt mắt bạn và dẫn dắt bằng giọng thì thầm trong 60 giây. Bạn chỉ được nghe và cảm nhận.", 60, "pr"),
+      D("Cởi áo ngoài và để {t} tự do chạm vào lưng, vai, cánh tay bạn trong 45 giây.", 45, "sk"),
+      D("Thì thầm vào tai {t} thật chi tiết điều bạn muốn làm với họ tối nay, chậm rãi từng câu.", 45, "kr"),
+      D("Ngồi đối diện, nhìn {t} và cởi 3 món trên người mình thật chậm. {t} là người quyết định thứ tự.", 60, "sr"),
+      D("Cho {t} trói nhẹ hai cổ tay bạn bằng khăn lụa (có thể tự tháo bất cứ lúc nào) rồi bị trêu chọc bằng hơi thở và môi trong 60 giây.", 60, "pkr"),
+      D("Hôn {t} từ môi xuống cổ, xuống xương đòn, thật chậm, không vội, trong 45 giây.", 45, "k"),
+      D("Trao cho {t} 90 giây làm bất cứ điều gì họ muốn trên vùng vai, lưng, cổ, tay bạn (trong giới hạn).", 90, "kr"),
+      D("Nhảy quyến rũ 1 phút cho {t}, tự cởi 2 món trên người theo nhịp bài hát.", 60, "sr"),
+      D("Đút cho {t} một viên đá lạnh bằng môi, rồi để nó tan dần trên cổ họ.", 45, "pk"),
+      D("Ra một mệnh lệnh thân mật cho {t}. Họ thực hiện ngay, và họ có quyền đổi ý bất cứ lúc nào.", 0, "r"),
+    ],
   },
   duo: {
     1: [
@@ -538,6 +562,12 @@ const DATA = {
       D("{p} và {t} cùng cởi 2 món trên người nhau trong 1 phút.", 60, "sk"),
       D("{p} và {t} chọn một lời hứa cho đêm nay và ký giao ước bằng một nụ hôn.", 0, "kr"),
     ],
+    5: [
+      D("{p} và {t} vào không gian riêng 5 phút: đèn mờ, nhạc chậm, cả hai tự dẫn dắt nhau (trong giới hạn).", 300, "kr"),
+      D("{p} và {t} thay phiên bịt mắt nhau và trêu chọc bằng hơi thở, môi, đá lạnh. Mỗi người 90 giây.", 180, "pk"),
+      D("{p} và {t} cùng cởi hết áo ngoài của nhau, chậm rãi, nhìn vào mắt nhau, rồi hôn ít nhất 60 giây.", 60, "sk"),
+      D("{p} và {t} thay phiên nói một điều mình muốn nhất tối nay, người kia có 10 giây để cân nhắc và có quyền nói không.", 0, "r"),
+    ],
   },
   group: {
     1: [
@@ -559,6 +589,11 @@ const DATA = {
       D("Mỗi người viết một điều táo bạo lên giấy, bốc ngẫu nhiên. Người bốc thực hiện, ai cũng có quyền từ chối.", 0, "r"),
       D("Cả bàn cùng ra một hành động cho {p}. {p} chọn: làm theo hoặc chịu phạt.", 0, "r"),
       D("{p} chọn một người, hai bên thay phiên thì thầm điều mình muốn làm với nhau tối nay.", 60, "kr"),
+    ],
+    5: [
+      D("Mỗi người viết một điều táo bạo (trong giới hạn của cả bàn) lên giấy. {p} bốc và chọn người thực hiện, ai cũng có quyền từ chối.", 0, "r"),
+      D("Cả bàn cùng bình chọn người quyến rũ nhất tối nay. Người thắng được chọn một người để hôn nồng cháy 30 giây (đối phương có quyền từ chối).", 30, "k"),
+      D("{p} chọn một người để ra 3 mệnh lệnh thân mật. Người đó thực hiện hoặc chịu phạt.", 0, "kr"),
     ],
   },
 };
@@ -603,7 +638,7 @@ const PEN = {
 };
 
 const TAGS = { k: "🤝 Đụng chạm", s: "👕 Cởi đồ", r: "🎭 Nhập vai", p: "🧊 Đạo cụ", d: "🥂 Đồ uống" };
-const LV = { 1: { n: "Khởi Động", e: "✨" }, 2: { n: "Tăng Nhiệt", e: "🔥" }, 3: { n: "Nóng Bỏng", e: "🌶️" }, 4: { n: "Cực Hạn", e: "☄️" } };
+const LV = { 1: { n: "Khởi Động", e: "✨" }, 2: { n: "Tăng Nhiệt", e: "🔥" }, 3: { n: "Nóng Bỏng", e: "🌶️" }, 4: { n: "Cực Hạn", e: "☄️" }, 5: { n: "Bùng Cháy", e: "💥" } };
 const KIND = {
   truth: { n: "💬 SỰ THẬT", c: "bg-purple-500/20 text-purple-200 border-purple-400/40" },
   dare:  { n: "🔥 THỬ THÁCH", c: "bg-rose-500/20 text-rose-200 border-rose-400/40" },
@@ -722,8 +757,8 @@ function setTab(t) {
    HIỂN THỊ
    ===================================================================== */
 function curLevel() {
-    if (S.level === 'auto') return clamp(1 + Math.floor(S.heat / 25), 1, 4);
-    if (S.level === 'mix') return 1 + rand(4);
+    if (S.level === 'auto') return clamp(1 + Math.floor(S.heat / 20), 1, 5);
+    if (S.level === 'mix') return 1 + rand(5);
     return +S.level;
 }
 const nm = i => S.players[i] ? S.players[i].name : 'cả bàn';
@@ -766,7 +801,7 @@ function renderLevels() {
     const box = $('#levels');
     const items = [
         ['1', '✨', 'Cấp 1', 'Khởi động'], ['2', '🔥', 'Cấp 2', 'Tăng nhiệt'], ['3', '🌶️', 'Cấp 3', 'Nóng bỏng'],
-        ['4', '☄️', 'Cấp 4', 'Cực hạn'], ['mix', '🎲', 'Trộn', 'Ngẫu nhiên'], ['auto', '📈', 'Leo thang', 'Theo nhiệt độ'],
+        ['4', '☄️', 'Cấp 4', 'Cực hạn'], ['5', '💥', 'Cấp 5', 'Bùng cháy'], ['mix', '🎲', 'Trộn', 'Ngẫu nhiên'], ['auto', '📈', 'Leo thang', 'Theo nhiệt độ'],
     ];
     box.innerHTML = items.map(([v, e, a, b]) =>
         `<button class="lvl-btn btn ${S.level === v ? 'on' : ''}" data-lv="${v}"><span class="text-lg">${e}</span>${a}<small>${b}</small></button>`).join('');
@@ -876,7 +911,7 @@ function getCard(kind, lvl) {
         const pool = WILD.filter(okTags);
         return pool.length ? pick(pool) : null;
     }
-    const order = [lvl, ...[1, 2, 3, 4].filter(l => l !== lvl).sort((a, b) => Math.abs(a - lvl) - Math.abs(b - lvl))];
+    const order = [lvl, ...[1, 2, 3, 4, 5].filter(l => l !== lvl).sort((a, b) => Math.abs(a - lvl) - Math.abs(b - lvl))];
     for (const l of order) {
         const base = ((DATA[kind] || {})[l] || []);
         const cs = S.custom.filter(c => c.kind === kind && +c.lvl === l).map(c => ({ t: c.t, s: 0, g: c.g || '' }));
@@ -1220,7 +1255,7 @@ function bind() {
     $('#levels').addEventListener('click', e => {
         const b = e.target.closest('[data-lv]'); if (!b) return;
         S.level = b.dataset.lv; save(); renderLevels(); renderTurn(); SFX.click();
-        if (S.level === '4') toast('☄️ Cấp Cực Hạn: hãy chắc chắn cả hai đều sẵn sàng. Ai cũng có thể bỏ qua.', 3800);
+        if (S.level === '4' || S.level === '5') toast('🔥 Cấp rất nóng: hãy chắc chắn cả hai đều sẵn sàng. Ai cũng có thể bỏ qua hoặc bấm DỪNG.', 4200);
         if (S.level === 'auto') toast('📈 Cấp độ sẽ tăng dần theo nhiệt độ');
     });
     $('#limits').addEventListener('click', e => {
